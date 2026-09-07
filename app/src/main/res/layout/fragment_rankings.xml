@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/primary_dark_navy"
+    android:orientation="vertical"
+    tools:context=".RankingsFragment">
+
+    <!-- Header -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="16dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="12dp"
+        android:text="Rankings"
+        android:textColor="@color/text_white"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <!-- Main Tab Row (Population / Area) -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="8dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnPopulation"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginEnd="4dp"
+            android:backgroundTint="@color/accent_red"
+            android:text="Population"
+            android:textAllCaps="false"
+            android:textColor="@color/text_white"
+            android:textSize="13sp" />
+
+        <Button
+            android:id="@+id/btnArea"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginStart="4dp"
+            android:background="@drawable/bg_search"
+            android:text="Area"
+            android:textAllCaps="false"
+            android:textColor="@color/text_light_gray"
+            android:textSize="13sp" />
+    </LinearLayout>
+
+    <!-- Sub Tab Row (Highest / Lowest) -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="8dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnHighest"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginEnd="4dp"
+            android:backgroundTint="@color/accent_yellow"
+            android:text="Highest"
+            android:textAllCaps="false"
+            android:textColor="@color/primary_dark_navy"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/btnLowest"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginStart="4dp"
+            android:background="@drawable/bg_search"
+            android:text="Lowest"
+            android:textAllCaps="false"
+            android:textColor="@color/text_light_gray"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <!-- Rankings List -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rankingsList"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:paddingHorizontal="16dp"
+        android:paddingBottom="8dp" />
+
+</LinearLayout>

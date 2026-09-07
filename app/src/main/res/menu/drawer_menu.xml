@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="MAIN">
+        <menu>
+            <item
+                android:id="@+id/nav_home"
+                android:icon="@drawable/ic_globe"
+                android:title="Home" />
+            <item
+                android:id="@+id/nav_all_countries"
+                android:icon="@drawable/ic_language"
+                android:title="All Countries" />
+            <item
+                android:id="@+id/nav_favorites"
+                android:icon="@drawable/ic_star_filled"
+                android:title="Favorites" />
+        </menu>
+    </item>
+
+    <item android:title="EXPLORE">
+        <menu>
+            <item
+                android:id="@+id/nav_continents"
+                android:icon="@drawable/ic_globe"
+                android:title="Continents" />
+            <item
+                android:id="@+id/nav_regions"
+                android:icon="@drawable/ic_location"
+                android:title="Regions" />
+            <item
+                android:id="@+id/nav_languages"
+                android:icon="@drawable/ic_language"
+                android:title="Languages" />
+            <item
+                android:id="@+id/nav_currencies"
+                android:icon="@drawable/ic_globe"
+                android:title="Currencies" />
+        </menu>
+    </item>
+
+    <item android:title="TOOLS">
+        <menu>
+            <item
+                android:id="@+id/nav_compare"
+                android:icon="@drawable/ic_globe"
+                android:title="Compare Countries" />
+            <item
+                android:id="@+id/nav_random"
+                android:icon="@drawable/ic_refresh"
+                android:title="Random Country" />
+            <item
+                android:id="@+id/nav_quiz"
+                android:icon="@drawable/ic_globe"
+                android:title="Country Quiz" />
+            <item
+                android:id="@+id/nav_rankings"
+                android:icon="@drawable/ic_globe"
+                android:title="Rankings" />
+            <item
+                android:id="@+id/nav_recently"
+                android:icon="@drawable/ic_timezone"
+                android:title="Recently Viewed" />
+        </menu>
+    </item>
+
+    <item android:title="OTHER">
+        <menu>
+            <item
+                android:id="@+id/nav_about"
+                android:icon="@drawable/ic_error"
+                android:title="About" />
+        </menu>
+    </item>
+
+</menu>

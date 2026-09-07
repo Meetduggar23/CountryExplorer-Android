@@ -1,155 +1,101 @@
 package com.example.countries
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import org.json.JSONObject
-import java.io.BufferedReader
-import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
-import java.net.SocketTimeoutException
-import java.net.UnknownHostException
 
-object ApiClient {
+class ApiClient {
 
-    private const val BASE_URL = "https://restcountries.com/v3.1/all"
-    private const val CONNECT_TIMEOUT = 15000
-    private const val READ_TIMEOUT = 15000
+    private val baseUrl = "https://restcountries.com/v3.1/all"
 
-    fun fetchCountries(): Result<List<Country>> {
-        var connection: HttpURLConnection? = null
-        var reader: BufferedReader? = null
-        return try {
-            val url = URL(BASE_URL)
-            connection = url.openConnection() as HttpURLConnection
-            connection.apply {
-                requestMethod = "GET"
-                connectTimeout = CONNECT_TIMEOUT
-                readTimeout = READ_TIMEOUT
-                setRequestProperty("Accept", "application/json")
-            }
+    suspend fun getCountries(): List<Country> = withContext(Dispatchers.IO) {
+        try {
+            val url = URL(baseUrl)
+            val connection = url.openConnection() as HttpURLConnection
+            connection.requestMethod = "GET"
+            connection.connectTimeout = 15000
+            connection.readTimeout = 15000
 
             val responseCode = connection.responseCode
-            if (responseCode != HttpURLConnection.HTTP_OK) {
-                return Result.failure(
-                    Exception("HTTP error: $responseCode - ${connection.responseMessage ?: "Unknown error"}")
-                )
-            }
-
-            reader = BufferedReader(InputStreamReader(connection.inputStream, Charsets.UTF_8))
-            val response = StringBuilder()
-            var line: String?
-            while (reader.readLine().also { line = it } != null) {
-                response.append(line)
-            }
-
-            val countries = parseCountries(response.toString())
-            if (countries.isEmpty()) {
-                Result.failure(Exception("No countries found in response"))
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                val inputStream = connection.inputStream
+                val response = inputStream.bufferedReader().use { it.readText() }
+                inputStream.close()
+                parseCountries(JSONArray(response))
             } else {
-                Result.success(countries)
+                throw Exception("HTTP error: $responseCode")
             }
-        } catch (e: SocketTimeoutException) {
-            Result.failure(Exception("Connection timed out. Please check your internet and try again."))
-        } catch (e: UnknownHostException) {
-            Result.failure(Exception("No internet connection. Please check your network settings."))
         } catch (e: Exception) {
-            Result.failure(Exception("Failed to fetch countries: ${e.message}"))
-        } finally {
-            try { reader?.close() } catch (_: Exception) {}
-            try { connection?.disconnect() } catch (_: Exception) {}
+            throw Exception("Failed to fetch countries: ${e.message}")
         }
     }
 
-    private fun parseCountries(json: String): List<Country> {
+    private fun parseCountries(jsonArray: JSONArray): List<Country> {
         val countries = mutableListOf<Country>()
-        val jsonArray = JSONArray(json)
-
         for (i in 0 until jsonArray.length()) {
             try {
-                val obj = jsonArray.getJSONObject(i)
-                countries.add(parseCountryObject(obj))
-            } catch (_: Exception) {
-                // skip malformed country objects
+                val json = jsonArray.getJSONObject(i)
+                countries.add(parseCountry(json))
+            } catch (e: Exception) {
+                // Skip malformed entries
             }
         }
-
-        countries.sortBy { it.commonName.lowercase() }
         return countries
     }
 
-    private fun parseCountryObject(obj: JSONObject): Country {
-        val name = obj.optJSONObject("name") ?: JSONObject()
-        val commonName = name.optString("common", "Unknown")
-        val officialName = name.optString("official", "Unknown")
+    private fun parseCountry(json: JSONObject): Country {
+        val name = json.getJSONObject("name")
+        val commonName = name.optString("common", "")
+        val officialName = name.optString("official", "")
 
-        val capitalArray = obj.optJSONArray("capital")
+        val capitalArray = json.optJSONArray("capital")
         val capital = if (capitalArray != null && capitalArray.length() > 0) {
-            capitalArray.optString(0, "Not available")
+            capitalArray.getString(0)
         } else {
-            "Not available"
+            "N/A"
         }
 
-        val region = obj.optString("region", "Unknown")
-        val subregion = obj.optString("subregion", "Not available")
-        val population = obj.optLong("population", 0)
-        val area = obj.optDouble("area", 0.0)
-        val cca2 = obj.optString("cca2", "Unknown")
-        val cca3 = obj.optString("cca3", "Unknown")
+        val region = json.optString("region", "")
+        val subregion = json.optString("subregion", "")
 
-        val currenciesObj = obj.optJSONObject("currencies")
-        val currencies = if (currenciesObj != null && currenciesObj.length() > 0) {
-            val names = mutableListOf<String>()
-            for (key in currenciesObj.keys()) {
-                val curr = currenciesObj.optJSONObject(key)
-                val name = curr?.optString("name", "") ?: ""
-                val symbol = curr?.optString("symbol", "") ?: ""
-                if (name.isNotEmpty()) {
-                    names.add(if (symbol.isNotEmpty()) "$name ($symbol)" else name)
-                }
-            }
-            names.joinToString(", ").ifEmpty { "Not available" }
-        } else {
-            "Not available"
-        }
+        val population = json.optLong("population", 0)
+        val area = json.optDouble("area", 0.0)
 
-        val languagesObj = obj.optJSONObject("languages")
-        val languages = if (languagesObj != null && languagesObj.length() > 0) {
-            val names = mutableListOf<String>()
-            for (key in languagesObj.keys()) {
-                val langName = languagesObj.optString(key, "")
-                if (langName.isNotEmpty()) names.add(langName)
-            }
-            names.joinToString(", ").ifEmpty { "Not available" }
-        } else {
-            "Not available"
-        }
+        val cca2 = json.optString("cca2", "")
+        val cca3 = json.optString("cca3", "")
 
-        val timezonesArray = obj.optJSONArray("timezones")
+        val currencies = parseCurrencies(json.optJSONObject("currencies"))
+        val languages = parseLanguages(json.optJSONObject("languages"))
+
         val timezones = mutableListOf<String>()
+        val timezonesArray = json.optJSONArray("timezones")
         if (timezonesArray != null) {
-            for (j in 0 until timezonesArray.length()) {
-                timezones.add(timezonesArray.optString(j, ""))
+            for (i in 0 until timezonesArray.length()) {
+                timezones.add(timezonesArray.getString(i))
             }
         }
 
-        val continentsArray = obj.optJSONArray("continents")
         val continents = mutableListOf<String>()
+        val continentsArray = json.optJSONArray("continents")
         if (continentsArray != null) {
-            for (j in 0 until continentsArray.length()) {
-                continents.add(continentsArray.optString(j, ""))
+            for (i in 0 until continentsArray.length()) {
+                continents.add(continentsArray.getString(i))
             }
         }
 
-        val bordersArray = obj.optJSONArray("borders")
         val borders = mutableListOf<String>()
+        val bordersArray = json.optJSONArray("borders")
         if (bordersArray != null) {
-            for (j in 0 until bordersArray.length()) {
-                borders.add(bordersArray.optString(j, ""))
+            for (i in 0 until bordersArray.length()) {
+                borders.add(bordersArray.getString(i))
             }
         }
 
-        val flagsObj = obj.optJSONObject("flags")
-        val flagUrl = flagsObj?.optString("png", "") ?: ""
+        val flags = json.optJSONObject("flags")
+        val flagUrl = flags?.optString("png", "") ?: ""
 
         return Country(
             commonName = commonName,
@@ -168,5 +114,29 @@ object ApiClient {
             borders = borders,
             flagUrl = flagUrl
         )
+    }
+
+    private fun parseCurrencies(json: JSONObject?): String {
+        if (json == null) return "N/A"
+        val currencies = mutableListOf<String>()
+        val keys = json.keys()
+        while (keys.hasNext()) {
+            val key = keys.next()
+            val currency = json.getJSONObject(key)
+            val name = currency.optString("name", "")
+            val symbol = currency.optString("symbol", "")
+            currencies.add("$name ($symbol)")
+        }
+        return if (currencies.isNotEmpty()) currencies.joinToString(", ") else "N/A"
+    }
+
+    private fun parseLanguages(json: JSONObject?): String {
+        if (json == null) return "N/A"
+        val languages = mutableListOf<String>()
+        val keys = json.keys()
+        while (keys.hasNext()) {
+            languages.add(json.getString(keys.next()))
+        }
+        return if (languages.isNotEmpty()) languages.joinToString(", ") else "N/A"
     }
 }

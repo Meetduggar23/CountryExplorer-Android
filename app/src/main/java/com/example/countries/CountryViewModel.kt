@@ -1,81 +1,127 @@
 package com.example.countries
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlin.random.Random
 
 sealed class CountriesUiState {
-    data object Loading : CountriesUiState()
-    data class Success(
-        val countries: List<Country>,
-        val totalCount: Int,
-        val searchQuery: String = ""
-    ) : CountriesUiState()
-
+    object Loading : CountriesUiState()
+    data class Success(val countries: List<Country>, val totalCount: Int = countries.size) : CountriesUiState()
     data class Error(val message: String) : CountriesUiState()
 }
 
-class CountryViewModel : ViewModel() {
+class CountryViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository = CountryRepository()
 
     private val _uiState = MutableStateFlow<CountriesUiState>(CountriesUiState.Loading)
-    val uiState: StateFlow<CountriesUiState> = _uiState
+    val uiState: StateFlow<CountriesUiState> = _uiState.asStateFlow()
 
-    private var isFetching = false
+    private val _allCountries = mutableListOf<Country>()
+    val allCountries: List<Country> get() = _allCountries.toList()
+
+    val favoriteManager = FavoriteManager(application)
+    val recentlyViewedManager = RecentlyViewedManager(application)
 
     init {
         loadCountries()
     }
 
     fun loadCountries() {
-        if (isFetching) return
-        isFetching = true
-
-        val cached = repository.getCachedCountries()
-        if (cached != null && cached.isNotEmpty()) {
-            _uiState.value = CountriesUiState.Success(
-                countries = cached,
-                totalCount = cached.size
-            )
-            isFetching = false
-            return
-        }
-
-        _uiState.value = CountriesUiState.Loading
-        viewModelScope.launch(Dispatchers.IO) {
-            val result = repository.fetchCountries()
-            result.onSuccess { countries ->
-                _uiState.value = CountriesUiState.Success(
-                    countries = countries,
-                    totalCount = countries.size
-                )
-            }.onFailure { error ->
-                _uiState.value = CountriesUiState.Error(
-                    error.message ?: "Unknown error occurred"
-                )
+        viewModelScope.launch {
+            _uiState.value = CountriesUiState.Loading
+            try {
+                val countries = repository.getCountries()
+                _allCountries.clear()
+                _allCountries.addAll(countries)
+                _uiState.value = CountriesUiState.Success(countries, countries.size)
+            } catch (e: Exception) {
+                _uiState.value = CountriesUiState.Error(e.message ?: "Unknown error occurred")
             }
-            isFetching = false
         }
     }
 
     fun search(query: String) {
-        val current = _uiState.value
-        if (current !is CountriesUiState.Success) return
-
-        val filtered = repository.searchCountries(query)
-        _uiState.value = current.copy(
-            countries = filtered,
-            searchQuery = query
-        )
+        if (query.isBlank()) {
+            _uiState.value = CountriesUiState.Success(_allCountries, _allCountries.size)
+            return
+        }
+        val filtered = _allCountries.filter { country ->
+            country.commonName.contains(query, ignoreCase = true) ||
+                country.officialName.contains(query, ignoreCase = true) ||
+                country.capital.contains(query, ignoreCase = true) ||
+                country.region.contains(query, ignoreCase = true) ||
+                country.subregion.contains(query, ignoreCase = true) ||
+                country.cca2.contains(query, ignoreCase = true) ||
+                country.cca3.contains(query, ignoreCase = true)
+        }
+        _uiState.value = CountriesUiState.Success(filtered, _allCountries.size)
     }
 
     fun refresh() {
-        isFetching = false
-        _uiState.value = CountriesUiState.Loading
         loadCountries()
+    }
+
+    fun getFilteredCountries(): List<Country> {
+        return when (val state = _uiState.value) {
+            is CountriesUiState.Success -> state.countries
+            else -> _allCountries
+        }
+    }
+
+    fun getCountriesByContinent(continent: String): List<Country> {
+        return _allCountries.filter { it.continents.any { c -> c.equals(continent, ignoreCase = true) } }
+    }
+
+    fun getCountriesByRegion(region: String): List<Country> {
+        return _allCountries.filter { it.region.equals(region, ignoreCase = true) }
+    }
+
+    fun getCountriesByLanguage(language: String): List<Country> {
+        return _allCountries.filter {
+            it.languages.split(", ").any { lang ->
+                lang.equals(language, ignoreCase = true)
+            }
+        }
+    }
+
+    fun getCountriesByCurrency(currency: String): List<Country> {
+        return _allCountries.filter {
+            it.currencies.contains(currency, ignoreCase = true)
+        }
+    }
+
+    fun getRankings(type: String, ascending: Boolean = false): List<Country> {
+        return when (type.lowercase()) {
+            "population" -> {
+                val sorted = _allCountries.sortedBy { it.population }
+                if (ascending) sorted else sorted.reversed()
+            }
+            "area" -> {
+                val sorted = _allCountries.sortedBy { it.area }
+                if (ascending) sorted else sorted.reversed()
+            }
+            "name" -> {
+                val sorted = _allCountries.sortedBy { it.commonName }
+                if (ascending) sorted else sorted.reversed()
+            }
+            else -> _allCountries
+        }
+    }
+
+    fun getRandomCountry(): Country? {
+        if (_allCountries.isEmpty()) return null
+        return _allCountries[Random.nextInt(_allCountries.size)]
+    }
+
+    fun getNeighbors(country: Country): List<Country> {
+        return _allCountries.filter {
+            it.cca3 in country.borders
+        }
     }
 }

@@ -1,181 +1,104 @@
 package com.example.countries
 
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.view.View
-import android.widget.Button
-import android.widget.EditText
+import android.view.MenuItem
 import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.ProgressBar
-import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import com.example.countries.fragments.*
+import com.google.android.material.navigation.NavigationView
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.net.HttpURLConnection
 import java.net.URL
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
+    private lateinit var drawerLayout: DrawerLayout
+    private lateinit var navigationView: NavigationView
     private lateinit var viewModel: CountryViewModel
-    private lateinit var adapter: CountryAdapter
-
-    private lateinit var appLogo: ImageView
-    private lateinit var appTitle: TextView
-    private lateinit var appSubtitle: TextView
-    private lateinit var searchContainer: LinearLayout
-    private lateinit var searchEditText: EditText
-    private lateinit var clearSearchButton: ImageView
-    private lateinit var refreshButton: ImageView
-    private lateinit var countryCountText: TextView
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var loadingContainer: LinearLayout
-    private lateinit var loadingText: TextView
-    private lateinit var progressBar: ProgressBar
-    private lateinit var errorContainer: LinearLayout
-    private lateinit var errorIcon: ImageView
-    private lateinit var errorText: TextView
-    private lateinit var retryButton: Button
-
-    private val imageCache = mutableMapOf<String, Bitmap>()
+    val imageCache = mutableMapOf<String, Bitmap>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        initViews()
-        setupViewModel()
-        setupRecyclerView()
-        setupSearch()
-        setupRefreshButton()
-        observeState()
-    }
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        setSupportActionBar(toolbar)
+        supportActionBar?.title = "Country Explorer"
 
-    private fun initViews() {
-        appLogo = findViewById(R.id.appLogo)
-        appTitle = findViewById(R.id.appTitle)
-        appSubtitle = findViewById(R.id.appSubtitle)
-        searchContainer = findViewById(R.id.searchContainer)
-        searchEditText = findViewById(R.id.searchEditText)
-        clearSearchButton = findViewById(R.id.clearSearchButton)
-        refreshButton = findViewById(R.id.refreshButton)
-        countryCountText = findViewById(R.id.countryCountText)
-        recyclerView = findViewById(R.id.recyclerView)
-        loadingContainer = findViewById(R.id.loadingContainer)
-        loadingText = findViewById(R.id.loadingText)
-        progressBar = findViewById(R.id.progressBar)
-        errorContainer = findViewById(R.id.errorContainer)
-        errorIcon = findViewById(R.id.errorIcon)
-        errorText = findViewById(R.id.errorText)
-        retryButton = findViewById(R.id.retryButton)
-    }
+        drawerLayout = findViewById(R.id.drawerLayout)
+        navigationView = findViewById(R.id.navigationView)
 
-    private fun setupViewModel() {
-        viewModel = androidx.lifecycle.ViewModelProvider(this)[CountryViewModel::class.java]
-    }
+        val toggle = ActionBarDrawerToggle(
+            this, drawerLayout, toolbar,
+            R.string.app_name, R.string.app_name
+        )
+        drawerLayout.addDrawerListener(toggle)
+        toggle.syncState()
 
-    private fun setupRecyclerView() {
-        adapter = CountryAdapter(emptyList(), imageCache) { country ->
-            val intent = android.content.Intent(this, CountryDetailActivity::class.java)
-            intent.putExtra("country", country)
-            startActivity(intent)
-        }
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = adapter
-    }
+        navigationView.setNavigationItemSelectedListener(this)
 
-    private fun setupSearch() {
-        searchEditText.addTextChangedListener(object : android.text.TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                val query = s?.toString() ?: ""
-                viewModel.search(query)
-                clearSearchButton.visibility = if (query.isNotEmpty()) View.VISIBLE else View.GONE
-            }
-            override fun afterTextChanged(s: android.text.Editable?) {}
-        })
+        viewModel = ViewModelProvider(this)[CountryViewModel::class.java]
 
-        clearSearchButton.setOnClickListener {
-            searchEditText.text.clear()
-            viewModel.search("")
+        if (savedInstanceState == null) {
+            loadFragment(HomeFragment())
+            navigationView.setCheckedItem(R.id.nav_home)
         }
     }
 
-    private fun setupRefreshButton() {
-        refreshButton.setOnClickListener {
-            searchEditText.text.clear()
-            viewModel.refresh()
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        val fragment: Fragment? = when (item.itemId) {
+            R.id.nav_home -> HomeFragment()
+            R.id.nav_all_countries -> AllCountriesFragment()
+            R.id.nav_favorites -> FavoritesFragment()
+            R.id.nav_continents -> ContinentsFragment()
+            R.id.nav_regions -> RegionsFragment()
+            R.id.nav_languages -> LanguagesFragment()
+            R.id.nav_currencies -> CurrenciesFragment()
+            R.id.nav_compare -> CompareFragment()
+            R.id.nav_random -> RandomCountryFragment()
+            R.id.nav_quiz -> QuizFragment()
+            R.id.nav_rankings -> RankingsFragment()
+            R.id.nav_recently -> RecentlyViewedFragment()
+            R.id.nav_about -> AboutFragment()
+            else -> null
         }
-    }
 
-    private fun observeState() {
-        lifecycleScope.launch {
-            viewModel.uiState.collectLatest { state ->
-                when (state) {
-                    is CountriesUiState.Loading -> showLoading()
-                    is CountriesUiState.Success -> showSuccess(state)
-                    is CountriesUiState.Error -> showError(state.message)
-                }
-            }
+        fragment?.let {
+            loadFragment(it)
+            supportActionBar?.title = item.title
         }
+
+        drawerLayout.closeDrawer(GravityCompat.START)
+        return true
     }
 
-    private fun showLoading() {
-        loadingContainer.visibility = View.VISIBLE
-        recyclerView.visibility = View.GONE
-        errorContainer.visibility = View.GONE
-        searchContainer.visibility = View.GONE
-        countryCountText.visibility = View.GONE
-        refreshButton.visibility = View.GONE
-        appLogo.visibility = View.VISIBLE
-        appTitle.visibility = View.VISIBLE
-        appSubtitle.visibility = View.VISIBLE
-        loadingText.text = "Loading countries..."
+    fun loadFragment(fragment: Fragment) {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragmentContainer, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 
-    private fun showSuccess(state: CountriesUiState.Success) {
-        loadingContainer.visibility = View.GONE
-        errorContainer.visibility = View.GONE
-        recyclerView.visibility = View.VISIBLE
-        searchContainer.visibility = View.VISIBLE
-        countryCountText.visibility = View.VISIBLE
-        refreshButton.visibility = View.VISIBLE
-        appLogo.visibility = View.GONE
-        appTitle.visibility = View.GONE
-        appSubtitle.visibility = View.GONE
-
-        val displayedCount = state.countries.size
-        val totalCount = state.totalCount
-        countryCountText.text = if (state.searchQuery.isNotBlank()) {
-            "$displayedCount of $totalCount countries"
+    override fun onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START)
+        } else if (supportFragmentManager.backStackEntryCount > 1) {
+            supportFragmentManager.popBackStack()
         } else {
-            "$totalCount countries"
-        }
-
-        adapter.updateData(state.countries)
-    }
-
-    private fun showError(message: String) {
-        loadingContainer.visibility = View.GONE
-        recyclerView.visibility = View.GONE
-        errorContainer.visibility = View.VISIBLE
-        searchContainer.visibility = View.GONE
-        countryCountText.visibility = View.GONE
-        refreshButton.visibility = View.GONE
-        appLogo.visibility = View.VISIBLE
-        appTitle.visibility = View.VISIBLE
-        appSubtitle.visibility = View.VISIBLE
-
-        errorText.text = message
-
-        retryButton.setOnClickListener {
-            viewModel.refresh()
+            super.onBackPressed()
         }
     }
 
@@ -185,7 +108,6 @@ class MainActivity : AppCompatActivity() {
             imageView.setImageBitmap(it)
             return
         }
-
         imageView.tag = url
         lifecycleScope.launch {
             val bitmap = withContext(Dispatchers.IO) {
@@ -197,15 +119,11 @@ class MainActivity : AppCompatActivity() {
                         connection.connect()
                         if (connection.responseCode == HttpURLConnection.HTTP_OK) {
                             BitmapFactory.decodeStream(connection.inputStream)
-                        } else {
-                            null
-                        }
+                        } else null
                     } finally {
                         connection.disconnect()
                     }
-                } catch (_: Exception) {
-                    null
-                }
+                } catch (_: Exception) { null }
             }
             if (bitmap != null) {
                 imageCache[url] = bitmap

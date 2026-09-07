@@ -11,8 +11,15 @@ import androidx.recyclerview.widget.RecyclerView
 class CountryAdapter(
     private var countries: List<Country>,
     private val imageCache: MutableMap<String, Bitmap>,
-    private val onClick: (Country) -> Unit
+    private val onClick: (Country) -> Unit,
+    private val onFavoriteToggle: ((Country) -> Unit)? = null
 ) : RecyclerView.Adapter<CountryAdapter.CountryViewHolder>() {
+
+    private var favoriteManager: FavoriteManager? = null
+
+    fun setFavoriteManager(manager: FavoriteManager) {
+        favoriteManager = manager
+    }
 
     fun updateData(newCountries: List<Country>) {
         countries = newCountries
@@ -39,6 +46,7 @@ class CountryAdapter(
         private val populationText: TextView = itemView.findViewById(R.id.populationText)
         private val codeBadge: TextView = itemView.findViewById(R.id.codeBadge)
         private val chevronIcon: ImageView = itemView.findViewById(R.id.chevronIcon)
+        private val favStar: ImageView? = itemView.findViewById(R.id.favStar)
 
         fun bind(country: Country) {
             countryName.text = country.commonName
@@ -57,6 +65,25 @@ class CountryAdapter(
                 }
             } else {
                 flagImage.setImageResource(R.drawable.bg_placeholder_flag)
+            }
+
+            if (onFavoriteToggle != null && favStar != null) {
+                favStar.visibility = View.VISIBLE
+                val isFav = favoriteManager?.isFavorite(country.cca3) == true
+                favStar.setImageResource(
+                    if (isFav) android.R.drawable.btn_star_big_on
+                    else android.R.drawable.btn_star_big_off
+                )
+                favStar.setOnClickListener {
+                    onFavoriteToggle?.invoke(country)
+                    val nowFav = favoriteManager?.isFavorite(country.cca3) == true
+                    favStar.setImageResource(
+                        if (nowFav) android.R.drawable.btn_star_big_on
+                        else android.R.drawable.btn_star_big_off
+                    )
+                }
+            } else {
+                favStar?.visibility = View.GONE
             }
 
             itemView.setOnClickListener { onClick(country) }

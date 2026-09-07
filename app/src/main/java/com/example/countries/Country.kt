@@ -18,4 +18,8 @@ data class Country(
     val continents: List<String>,
     val borders: List<String>,
     val flagUrl: String
-) : Serializable
+) : Serializable {
+    fun getCountriesUsingLanguage(allCountries: List<Country>): List<Country> {
+        return allCountries.filter { it.languages.contains(this.languages.split(", ").firstOrNull() ?: "") }
+    }
+}
