@@ -49,3 +49,7 @@
 ## License
 
 MIT
+
+---
+
+<p align="center"><strong>Made By Meet Duggar</strong></p>
