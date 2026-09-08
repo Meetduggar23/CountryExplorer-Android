@@ -60,8 +60,8 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/ic_language"
-                    android:tint="@color/bottom_nav_icon"
-                    tools:ignore="ContentDescription" />
+                    android:contentDescription="All Countries"
+                    android:tint="@color/bottom_nav_icon" />
             </LinearLayout>
 
             <!-- Favorites -->
@@ -79,8 +79,8 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/ic_star"
-                    android:tint="@color/bottom_nav_icon"
-                    tools:ignore="ContentDescription" />
+                    android:contentDescription="Favorites"
+                    android:tint="@color/bottom_nav_icon" />
             </LinearLayout>
 
             <!-- Compare -->
@@ -98,8 +98,8 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/ic_compare"
-                    android:tint="@color/bottom_nav_icon"
-                    tools:ignore="ContentDescription" />
+                    android:contentDescription="Compare"
+                    android:tint="@color/bottom_nav_icon" />
             </LinearLayout>
 
             <!-- Random -->
@@ -117,8 +117,8 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/ic_random"
-                    android:tint="@color/bottom_nav_icon"
-                    tools:ignore="ContentDescription" />
+                    android:contentDescription="Random Country"
+                    android:tint="@color/bottom_nav_icon" />
             </LinearLayout>
 
             <!-- Quiz -->
@@ -136,8 +136,8 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/ic_quiz"
-                    android:tint="@color/bottom_nav_icon"
-                    tools:ignore="ContentDescription" />
+                    android:contentDescription="Country Quiz"
+                    android:tint="@color/bottom_nav_icon" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
