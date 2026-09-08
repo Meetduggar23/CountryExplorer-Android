@@ -67,6 +67,10 @@
     <item android:title="OTHER">
         <menu>
             <item
+                android:id="@+id/nav_help"
+                android:icon="@drawable/ic_globe"
+                android:title="Help" />
+            <item
                 android:id="@+id/nav_about"
                 android:icon="@drawable/ic_error"
                 android:title="About" />

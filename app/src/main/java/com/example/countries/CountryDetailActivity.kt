@@ -4,7 +4,6 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Build
 import android.os.Bundle
@@ -13,10 +12,10 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -45,11 +44,22 @@ class CountryDetailActivity : AppCompatActivity() {
     private lateinit var favButton: ImageView
     private lateinit var shareButton: ImageView
     private lateinit var copyButton: ImageView
+    private lateinit var pinButton: ImageView
+    private lateinit var copyNameBtn: ImageView
+    private lateinit var copyCodeBtn: ImageView
+    private lateinit var summaryPopulation: TextView
+    private lateinit var summaryArea: TextView
+    private lateinit var summaryRegion: TextView
+    private lateinit var summaryCapital: TextView
+    private lateinit var summaryCurrency: TextView
+    private lateinit var summaryContainer: LinearLayout
     private lateinit var neighborsContainer: LinearLayout
     private lateinit var neighborsList: LinearLayout
 
     private lateinit var favoriteManager: FavoriteManager
+    private lateinit var pinManager: PinManager
     private lateinit var recentlyViewedManager: RecentlyViewedManager
+    private lateinit var viewModel: CountryViewModel
     private var currentCountry: Country? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,7 +67,9 @@ class CountryDetailActivity : AppCompatActivity() {
         setContentView(R.layout.activity_country_detail)
 
         favoriteManager = FavoriteManager(this)
+        pinManager = PinManager(this)
         recentlyViewedManager = RecentlyViewedManager(this)
+        viewModel = ViewModelProvider(this)[CountryViewModel::class.java]
 
         initViews()
         setupButtons()
@@ -100,6 +112,15 @@ class CountryDetailActivity : AppCompatActivity() {
         favButton = findViewById(R.id.favButton)
         shareButton = findViewById(R.id.shareButton)
         copyButton = findViewById(R.id.copyButton)
+        pinButton = findViewById(R.id.pinButton)
+        copyNameBtn = findViewById(R.id.copyNameBtn)
+        copyCodeBtn = findViewById(R.id.copyCodeBtn)
+        summaryPopulation = findViewById(R.id.summaryPopulation)
+        summaryArea = findViewById(R.id.summaryArea)
+        summaryRegion = findViewById(R.id.summaryRegion)
+        summaryCapital = findViewById(R.id.summaryCapital)
+        summaryCurrency = findViewById(R.id.summaryCurrency)
+        summaryContainer = findViewById(R.id.summaryContainer)
         neighborsContainer = findViewById(R.id.neighborsContainer)
         neighborsList = findViewById(R.id.neighborsList)
     }
@@ -107,16 +128,61 @@ class CountryDetailActivity : AppCompatActivity() {
     private fun setupButtons() {
         backButton.setOnClickListener { finish() }
 
+        flagImageLarge.setOnClickListener {
+            currentCountry?.let { country ->
+                if (country.flagUrl.isNotEmpty()) {
+                    val intent = Intent(this, FlagViewerActivity::class.java)
+                    intent.putExtra("flagUrl", country.flagUrl)
+                    intent.putExtra("countryName", country.commonName)
+                    startActivity(intent)
+                } else {
+                    Snackbar.make(flagImageLarge, "No flag available", Snackbar.LENGTH_SHORT).show()
+                }
+            }
+        }
+
+        copyNameBtn.setOnClickListener {
+            currentCountry?.let { country ->
+                val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                val clip = ClipData.newPlainText("Country Name", country.commonName)
+                clipboard.setPrimaryClip(clip)
+                Snackbar.make(copyNameBtn, "Country name copied", Snackbar.LENGTH_SHORT).show()
+            }
+        }
+
+        copyCodeBtn.setOnClickListener {
+            currentCountry?.let { country ->
+                val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                val clip = ClipData.newPlainText("Country Code", country.cca2)
+                clipboard.setPrimaryClip(clip)
+                Snackbar.make(copyCodeBtn, "Country code copied", Snackbar.LENGTH_SHORT).show()
+            }
+        }
+
+        pinButton.setOnClickListener {
+            currentCountry?.let { country ->
+                if (pinManager.isPinned(country.cca3)) {
+                    pinManager.removePin(country.cca3)
+                    pinButton.setImageResource(R.drawable.ic_pin)
+                    Snackbar.make(pinButton, "Country unpinned", Snackbar.LENGTH_SHORT).show()
+                } else {
+                    pinManager.addPin(country.cca3)
+                    pinButton.setImageResource(R.drawable.ic_pin_filled)
+                    Snackbar.make(pinButton, "Country pinned", Snackbar.LENGTH_SHORT).show()
+                }
+            }
+        }
+
         favButton.setOnClickListener {
             currentCountry?.let { country ->
                 if (favoriteManager.isFavorite(country.cca3)) {
                     favoriteManager.removeFavorite(country.cca3)
                     favButton.setImageResource(R.drawable.ic_star)
-                    Toast.makeText(this, "Removed from favorites", Toast.LENGTH_SHORT).show()
+                    Snackbar.make(favButton, "Removed from favorites", Snackbar.LENGTH_SHORT).show()
                 } else {
                     favoriteManager.addFavorite(country.cca3)
                     favButton.setImageResource(R.drawable.ic_star_filled)
-                    Toast.makeText(this, "Added to favorites", Toast.LENGTH_SHORT).show()
+                    Snackbar.make(favButton, "Added to favorites", Snackbar.LENGTH_SHORT).show()
                 }
             }
         }
@@ -124,7 +190,7 @@ class CountryDetailActivity : AppCompatActivity() {
         shareButton.setOnClickListener {
             currentCountry?.let { country ->
                 val shareText = buildString {
-                    appendLine("${country.commonName}")
+                    appendLine(country.commonName)
                     appendLine("Official: ${country.officialName}")
                     appendLine("Capital: ${country.capital}")
                     appendLine("Population: ${formatPopulation(country.population)}")
@@ -156,7 +222,7 @@ class CountryDetailActivity : AppCompatActivity() {
                 val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                 val clip = ClipData.newPlainText("Country Info", copyText)
                 clipboard.setPrimaryClip(clip)
-                Toast.makeText(this, "Country information copied.", Toast.LENGTH_SHORT).show()
+                Snackbar.make(copyButton, "Country information copied", Snackbar.LENGTH_SHORT).show()
             }
         }
     }
@@ -164,22 +230,33 @@ class CountryDetailActivity : AppCompatActivity() {
     private fun displayCountry(country: Country) {
         countryNameText.text = country.commonName
         officialNameText.text = country.officialName
-        capitalValue.text = country.capital
-        regionValue.text = country.region
-        subregionValue.text = country.subregion
+        capitalValue.text = country.capital.ifEmpty { "Not available" }
+        regionValue.text = country.region.ifEmpty { "Not available" }
+        subregionValue.text = country.subregion.ifEmpty { "Not available" }
         populationValue.text = formatPopulation(country.population)
         areaValue.text = formatArea(country.area)
-        code2Value.text = country.cca2
-        code3Value.text = country.cca3
-        currenciesValue.text = country.currencies
-        languagesValue.text = country.languages
+        code2Value.text = country.cca2.ifEmpty { "Not available" }
+        code3Value.text = country.cca3.ifEmpty { "Not available" }
+        currenciesValue.text = country.currencies.ifEmpty { "Not available" }
+        languagesValue.text = country.languages.ifEmpty { "Not available" }
         timezonesValue.text = country.timezones.joinToString(", ").ifEmpty { "Not available" }
         continentsValue.text = country.continents.joinToString(", ").ifEmpty { "Not available" }
         bordersValue.text = country.borders.joinToString(", ").ifEmpty { "No land borders" }
 
+        summaryPopulation.text = formatPopulation(country.population)
+        summaryArea.text = formatArea(country.area)
+        summaryRegion.text = country.region.ifEmpty { "Not available" }
+        summaryCapital.text = country.capital.ifEmpty { "Not available" }
+        summaryCurrency.text = country.currencies.ifEmpty { "Not available" }
+
         favButton.setImageResource(
             if (favoriteManager.isFavorite(country.cca3)) R.drawable.ic_star_filled
             else R.drawable.ic_star
+        )
+
+        pinButton.setImageResource(
+            if (pinManager.isPinned(country.cca3)) R.drawable.ic_pin_filled
+            else R.drawable.ic_pin
         )
 
         if (country.flagUrl.isNotEmpty()) {
@@ -219,7 +296,6 @@ class CountryDetailActivity : AppCompatActivity() {
             return
         }
 
-        val viewModel = ViewModelProvider(this)[CountryViewModel::class.java]
         val neighbors = viewModel.getNeighbors(country)
 
         if (neighbors.isEmpty()) {

@@ -1,34 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/primary_dark_navy"
     android:orientation="vertical"
-    tools:context=".FavoritesFragment">
+    tools:context=".fragments.FavoritesFragment">
 
     <!-- Header -->
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
         android:paddingHorizontal="16dp"
         android:paddingTop="16dp"
-        android:paddingBottom="8dp"
-        android:text="Favorite Countries"
-        android:textColor="@color/text_white"
-        android:textSize="20sp"
-        android:textStyle="bold" />
+        android:paddingBottom="8dp">
 
-    <!-- Favorites Count -->
-    <TextView
-        android:id="@+id/favoritesCount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="16dp"
-        android:paddingBottom="8dp"
-        android:textColor="@color/text_muted"
-        android:textSize="13sp"
-        tools:text="0 favorite(s)" />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Favorite Countries"
+            android:textColor="@color/text_white"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/favoritesCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_muted"
+            android:textSize="13sp"
+            tools:text="0 favorite(s)" />
+    </LinearLayout>
 
     <!-- Search Bar -->
     <LinearLayout
@@ -73,51 +79,85 @@
             tools:ignore="ContentDescription" />
     </LinearLayout>
 
+    <!-- Clear All Button -->
+    <TextView
+        android:id="@+id/clearAllButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="8dp"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="6dp"
+        android:text="Clear All"
+        android:textColor="@color/accent_red"
+        android:textSize="13sp" />
+
     <!-- Favorites List -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:clipToPadding="false"
-        android:paddingTop="4dp"
-        android:paddingBottom="8dp" />
+        android:layout_weight="1">
 
-    <!-- Empty State -->
-    <LinearLayout
-        android:id="@+id/emptyState"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:visibility="gone">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingTop="4dp"
+            android:paddingBottom="80dp" />
 
-        <ImageView
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:alpha="0.4"
-            android:src="@drawable/ic_star_filled"
-            android:tint="@color/accent_yellow"
-            tools:ignore="ContentDescription" />
+        <!-- Empty State -->
+        <LinearLayout
+            android:id="@+id/emptyState"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="No favorite countries yet"
-            android:textColor="@color/text_muted"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            <ImageView
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:alpha="0.4"
+                android:src="@drawable/ic_star_filled"
+                android:tint="@color/accent_yellow"
+                tools:ignore="ContentDescription" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="Tap the star on any country to add it here"
-            android:textColor="@color/text_muted"
-            android:textSize="13sp"
-            android:gravity="center" />
-    </LinearLayout>
+            <TextView
+                android:id="@+id/emptyStateText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="No favorite countries yet"
+                android:textColor="@color/text_muted"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Tap the star on any country to add it here"
+                android:textColor="@color/text_muted"
+                android:textSize="13sp"
+                android:gravity="center" />
+        </LinearLayout>
+
+        <!-- Scroll to Top FAB -->
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/scrollUpFab"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="16dp"
+            android:layout_marginBottom="16dp"
+            android:contentDescription="Scroll to top"
+            android:src="@drawable/ic_back"
+            android:visibility="gone"
+            app:backgroundTint="@color/accent_red"
+            app:fabSize="normal"
+            app:tint="@color/text_white" />
+    </FrameLayout>
 
 </LinearLayout>

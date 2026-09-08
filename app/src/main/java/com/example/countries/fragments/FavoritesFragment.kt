@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -17,6 +18,8 @@ import com.example.countries.CountryViewModel
 import com.example.countries.CountriesUiState
 import com.example.countries.FavoriteManager
 import com.example.countries.R
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -25,6 +28,12 @@ class FavoritesFragment : Fragment() {
     private lateinit var viewModel: CountryViewModel
     private lateinit var favoriteManager: FavoriteManager
     private lateinit var adapter: CountryAdapter
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var emptyState: View
+    private lateinit var emptyStateText: TextView
+    private lateinit var favoritesCount: TextView
+    private lateinit var searchEditText: EditText
+    private lateinit var scrollUpFab: FloatingActionButton
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,10 +48,13 @@ class FavoritesFragment : Fragment() {
         viewModel = ViewModelProvider(requireActivity())[CountryViewModel::class.java]
         favoriteManager = FavoriteManager(requireContext())
 
-        val searchEditText = view.findViewById<EditText>(R.id.searchEditText)
-        val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
-        val emptyState = view.findViewById<TextView>(R.id.emptyState)
-        val favoritesCount = view.findViewById<TextView>(R.id.favoritesCount)
+        searchEditText = view.findViewById(R.id.searchEditText)
+        recyclerView = view.findViewById(R.id.recyclerView)
+        emptyState = view.findViewById(R.id.emptyState)
+        emptyStateText = view.findViewById(R.id.emptyStateText)
+        favoritesCount = view.findViewById(R.id.favoritesCount)
+        scrollUpFab = view.findViewById(R.id.scrollUpFab)
+        val clearAllButton = view.findViewById<View>(R.id.clearAllButton)
 
         val imageCache = mutableMapOf<String, android.graphics.Bitmap>()
         adapter = CountryAdapter(emptyList(), imageCache, { country ->
@@ -58,6 +70,16 @@ class FavoritesFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
 
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (dy > 0) scrollUpFab.show() else if (dy < 0) scrollUpFab.show()
+            }
+        })
+
+        scrollUpFab.setOnClickListener {
+            recyclerView.smoothScrollToPosition(0)
+        }
+
         searchEditText.addTextChangedListener(object : android.text.TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
@@ -65,6 +87,25 @@ class FavoritesFragment : Fragment() {
             }
             override fun afterTextChanged(s: android.text.Editable?) {}
         })
+
+        clearAllButton.setOnClickListener {
+            val currentFavorites = getFilteredFavorites("")
+            if (currentFavorites.isEmpty()) {
+                Snackbar.make(view, "No favorites to clear", Snackbar.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            AlertDialog.Builder(requireContext())
+                .setTitle("Clear All Favorites")
+                .setMessage("Remove all favorite countries?")
+                .setPositiveButton("Clear") { _, _ ->
+                    val allFavorites = favoriteManager.getFavoriteCodes()
+                    allFavorites.forEach { code -> favoriteManager.removeFavorite(code) }
+                    loadFavorites("")
+                    Snackbar.make(view, "All favorites cleared", Snackbar.LENGTH_SHORT).show()
+                }
+                .setNegativeButton("Cancel", null)
+                .show()
+        }
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.uiState.collectLatest { state ->
@@ -77,21 +118,15 @@ class FavoritesFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        val searchEditText = view?.findViewById<EditText>(R.id.searchEditText)
-        loadFavorites(searchEditText?.text?.toString() ?: "")
+        loadFavorites(searchEditText.text.toString())
     }
 
-    private fun loadFavorites(query: String) {
-        val view = view ?: return
-        val emptyState = view.findViewById<TextView>(R.id.emptyState)
-        val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
-        val favoritesCount = view.findViewById<TextView>(R.id.favoritesCount)
-
+    private fun getFilteredFavorites(query: String): List<com.example.countries.Country> {
         val state = viewModel.uiState.value
-        if (state !is CountriesUiState.Success) return
+        if (state !is CountriesUiState.Success) return emptyList()
 
         val favorites = favoriteManager.getFavorites(state.countries)
-        val filtered = if (query.isBlank()) favorites else {
+        return if (query.isBlank()) favorites else {
             val lower = query.lowercase()
             favorites.filter {
                 it.commonName.lowercase().contains(lower) ||
@@ -99,8 +134,13 @@ class FavoritesFragment : Fragment() {
                     it.region.lowercase().contains(lower)
             }
         }
+    }
 
-        favoritesCount.text = "${favorites.size} favorite(s)"
+    private fun loadFavorites(query: String) {
+        val view = view ?: return
+        val filtered = getFilteredFavorites(query)
+
+        favoritesCount.text = "${filtered.size} favorite(s)"
         adapter.updateData(filtered)
 
         if (filtered.isEmpty()) {

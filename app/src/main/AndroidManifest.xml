@@ -27,6 +27,9 @@
         <activity
             android:name=".CountryDetailActivity"
             android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".FlagViewerActivity"
+            android:theme="@style/Theme.Countries" />
     </application>
 
 </manifest>

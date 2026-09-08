@@ -72,6 +72,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.nav_quiz -> QuizFragment()
             R.id.nav_rankings -> RankingsFragment()
             R.id.nav_recently -> RecentlyViewedFragment()
+            R.id.nav_help -> HelpFragment()
             R.id.nav_about -> AboutFragment()
             else -> null
         }

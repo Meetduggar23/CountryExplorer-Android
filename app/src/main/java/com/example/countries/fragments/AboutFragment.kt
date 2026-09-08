@@ -1,5 +1,6 @@
 package com.example.countries.fragments
 
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -27,6 +28,12 @@ class AboutFragment : Fragment() {
 
         aboutLogo.setImageResource(R.drawable.ic_app_icon)
         appName.text = "Country Explorer"
-        versionText.text = "Version 1.0"
+
+        try {
+            val packageInfo = requireContext().packageManager.getPackageInfo(requireContext().packageName, 0)
+            versionText.text = "Version ${packageInfo.versionName} (Build ${packageInfo.longVersionCode})"
+        } catch (e: PackageManager.NameNotFoundException) {
+            versionText.text = "Version 1.0"
+        }
     }
 }

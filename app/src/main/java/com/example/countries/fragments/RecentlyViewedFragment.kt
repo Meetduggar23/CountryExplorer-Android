@@ -4,8 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -20,6 +20,8 @@ import com.example.countries.FavoriteManager
 import com.example.countries.MainActivity
 import com.example.countries.R
 import com.example.countries.RecentlyViewedManager
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -29,6 +31,10 @@ class RecentlyViewedFragment : Fragment() {
     private lateinit var recentlyViewedManager: RecentlyViewedManager
     private lateinit var favoriteManager: FavoriteManager
     private lateinit var adapter: CountryAdapter
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var emptyState: View
+    private lateinit var emptyStateText: TextView
+    private lateinit var scrollUpFab: FloatingActionButton
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,9 +50,11 @@ class RecentlyViewedFragment : Fragment() {
         recentlyViewedManager = RecentlyViewedManager(requireContext())
         favoriteManager = FavoriteManager(requireContext())
 
-        val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
-        val emptyState = view.findViewById<TextView>(R.id.emptyState)
-        val clearButton = view.findViewById<Button>(R.id.clearButton)
+        recyclerView = view.findViewById(R.id.recyclerView)
+        emptyState = view.findViewById(R.id.emptyState)
+        emptyStateText = view.findViewById(R.id.emptyStateText)
+        scrollUpFab = view.findViewById(R.id.scrollUpFab)
+        val clearButton = view.findViewById<TextView>(R.id.clearButton)
 
         val imageCache = mutableMapOf<String, android.graphics.Bitmap>()
         adapter = CountryAdapter(emptyList(), imageCache, { country ->
@@ -66,12 +74,36 @@ class RecentlyViewedFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
 
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (dy > 0) scrollUpFab.show() else if (dy < 0) scrollUpFab.show()
+            }
+        })
+
+        scrollUpFab.setOnClickListener {
+            recyclerView.smoothScrollToPosition(0)
+        }
+
         clearButton.setOnClickListener {
-            recentlyViewedManager.clear()
-            adapter.updateData(emptyList())
-            emptyState.visibility = View.VISIBLE
-            recyclerView.visibility = View.GONE
-            clearButton.visibility = View.GONE
+            val state = viewModel.uiState.value
+            if (state !is CountriesUiState.Success) return@setOnClickListener
+            val recent = recentlyViewedManager.getRecentlyViewed(state.countries)
+            if (recent.isEmpty()) {
+                Snackbar.make(view, "No history to clear", Snackbar.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            AlertDialog.Builder(requireContext())
+                .setTitle("Clear History")
+                .setMessage("Clear all recently viewed countries?")
+                .setPositiveButton("Clear") { _, _ ->
+                    recentlyViewedManager.clear()
+                    adapter.updateData(emptyList())
+                    emptyState.visibility = View.VISIBLE
+                    recyclerView.visibility = View.GONE
+                    Snackbar.make(view, "Recently viewed cleared", Snackbar.LENGTH_SHORT).show()
+                }
+                .setNegativeButton("Cancel", null)
+                .show()
         }
 
         viewLifecycleOwner.lifecycleScope.launch {

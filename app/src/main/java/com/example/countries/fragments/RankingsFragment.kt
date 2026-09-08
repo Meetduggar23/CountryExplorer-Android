@@ -15,7 +15,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.countries.Country
 import com.example.countries.CountryViewModel
 import com.example.countries.CountriesUiState
+import com.example.countries.MainActivity
 import com.example.countries.R
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -24,6 +26,8 @@ class RankingsFragment : Fragment() {
     private lateinit var viewModel: CountryViewModel
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: RankingAdapter
+    private lateinit var rankingTitle: TextView
+    private lateinit var scrollUpFab: FloatingActionButton
     private var allCountries = listOf<Country>()
     private var currentMetric = "population"
     private var currentOrder = "highest"
@@ -45,10 +49,22 @@ class RankingsFragment : Fragment() {
         val btnHighest = view.findViewById<Button>(R.id.btnHighest)
         val btnLowest = view.findViewById<Button>(R.id.btnLowest)
         recyclerView = view.findViewById(R.id.rankingsList)
+        rankingTitle = view.findViewById(R.id.rankingTitle)
+        scrollUpFab = view.findViewById(R.id.scrollUpFab)
 
         adapter = RankingAdapter()
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
+
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (dy > 0) scrollUpFab.show() else if (dy < 0) scrollUpFab.show()
+            }
+        })
+
+        scrollUpFab.setOnClickListener {
+            recyclerView.smoothScrollToPosition(0)
+        }
 
         fun updateMainButtons() {
             if (currentMetric == "population") {
@@ -82,29 +98,41 @@ class RankingsFragment : Fragment() {
             }
         }
 
+        fun updateTitle() {
+            val metricLabel = if (currentMetric == "population") "Population" else "Area"
+            val orderLabel = if (currentOrder == "highest") "Highest" else "Lowest"
+            rankingTitle.text = "$metricLabel ($orderLabel)"
+        }
+
         btnPopulation.setOnClickListener {
             currentMetric = "population"
             updateMainButtons()
+            updateTitle()
             updateRankings()
         }
 
         btnArea.setOnClickListener {
             currentMetric = "area"
             updateMainButtons()
+            updateTitle()
             updateRankings()
         }
 
         btnHighest.setOnClickListener {
             currentOrder = "highest"
             updateSubButtons()
+            updateTitle()
             updateRankings()
         }
 
         btnLowest.setOnClickListener {
             currentOrder = "lowest"
             updateSubButtons()
+            updateTitle()
             updateRankings()
         }
+
+        updateTitle()
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.uiState.collectLatest { state ->
@@ -117,17 +145,8 @@ class RankingsFragment : Fragment() {
     }
 
     private fun updateRankings() {
-        val sorted = when (currentMetric) {
-            "population" -> {
-                if (currentOrder == "highest") allCountries.sortedByDescending { it.population }
-                else allCountries.sortedBy { it.population }
-            }
-            "area" -> {
-                if (currentOrder == "highest") allCountries.sortedByDescending { it.area }
-                else allCountries.sortedBy { it.area }
-            }
-            else -> allCountries
-        }
+        val ascending = currentOrder == "lowest"
+        val sorted = viewModel.getRankings(currentMetric, ascending)
         adapter.updateData(sorted, currentMetric)
     }
 
@@ -161,23 +180,19 @@ class RankingsFragment : Fragment() {
             holder.countryName.text = country.commonName
 
             val value = when (metric) {
-                "population" -> formatNumber(country.population)
-                "area" -> String.format("%,.2f km\u00B2", country.area)
+                "population" -> String.format("%,d", country.population)
+                "area" -> String.format("%,.0f km\u00B2", country.area)
                 else -> ""
             }
             holder.valueText.text = value
 
             if (country.flagUrl.isNotEmpty()) {
                 holder.flagImage.tag = country.flagUrl
-                val activity = holder.itemView.context as? com.example.countries.MainActivity
+                val activity = holder.itemView.context as? MainActivity
                 activity?.loadImage(country.flagUrl, holder.flagImage)
             }
         }
 
         override fun getItemCount(): Int = countries.size
-
-        private fun formatNumber(num: Long): String {
-            return String.format("%,d", num)
-        }
     }
 }
