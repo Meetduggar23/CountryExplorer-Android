@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -36,12 +35,6 @@ class HomeFragment : Fragment() {
     private lateinit var recentlyViewedManager: RecentlyViewedManager
     private lateinit var adapter: CountryAdapter
 
-    private lateinit var navIconAllCountries: ImageView
-    private lateinit var navIconFavorites: ImageView
-    private lateinit var navIconCompare: ImageView
-    private lateinit var navIconRandom: ImageView
-    private lateinit var navIconQuiz: ImageView
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -71,22 +64,9 @@ class HomeFragment : Fragment() {
         val retryHomeButton = view.findViewById<TextView>(R.id.retryHomeButton)
         val scrollView = view.findViewById<android.widget.ScrollView>(R.id.homeScrollView)
 
-        navIconAllCountries = view.findViewById(R.id.navIconAllCountries)
-        navIconFavorites = view.findViewById(R.id.navIconFavorites)
-        navIconCompare = view.findViewById(R.id.navIconCompare)
-        navIconRandom = view.findViewById(R.id.navIconRandom)
-        navIconQuiz = view.findViewById(R.id.navIconQuiz)
-
         ViewCompat.setOnApplyWindowInsetsListener(scrollView) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(v.paddingLeft, v.paddingTop, v.paddingRight, 16)
-            insets
-        }
-
-        val bottomNav = view.findViewById<LinearLayout>(R.id.bottomNavContainer)
-        ViewCompat.setOnApplyWindowInsetsListener(bottomNav) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(0, 0, 0, systemBars.bottom)
             insets
         }
 
@@ -102,8 +82,6 @@ class HomeFragment : Fragment() {
 
         recentlyViewedList.layoutManager = LinearLayoutManager(requireContext())
         recentlyViewedList.adapter = adapter
-
-        setupBottomNav()
 
         retryHomeButton.setOnClickListener {
             viewModel.refresh()
@@ -191,53 +169,6 @@ class HomeFragment : Fragment() {
                 }
             }
         }
-    }
-
-    private fun setupBottomNav() {
-        val navAllCountries = view?.findViewById<View>(R.id.navAllCountries)
-        val navFavorites = view?.findViewById<View>(R.id.navFavorites)
-        val navCompare = view?.findViewById<View>(R.id.navCompare)
-        val navRandom = view?.findViewById<View>(R.id.navRandom)
-        val navQuiz = view?.findViewById<View>(R.id.navQuiz)
-
-        navAllCountries?.setOnClickListener {
-            clearNavSelection()
-            navIconAllCountries.setColorFilter(resources.getColor(R.color.accent_yellow, null))
-            (activity as MainActivity).loadFragment(AllCountriesFragment())
-        }
-
-        navFavorites?.setOnClickListener {
-            clearNavSelection()
-            navIconFavorites.setColorFilter(resources.getColor(R.color.accent_yellow, null))
-            (activity as MainActivity).loadFragment(FavoritesFragment())
-        }
-
-        navCompare?.setOnClickListener {
-            clearNavSelection()
-            navIconCompare.setColorFilter(resources.getColor(R.color.accent_yellow, null))
-            (activity as MainActivity).loadFragment(CompareFragment())
-        }
-
-        navRandom?.setOnClickListener {
-            clearNavSelection()
-            navIconRandom.setColorFilter(resources.getColor(R.color.accent_yellow, null))
-            (activity as MainActivity).loadFragment(RandomCountryFragment())
-        }
-
-        navQuiz?.setOnClickListener {
-            clearNavSelection()
-            navIconQuiz.setColorFilter(resources.getColor(R.color.accent_yellow, null))
-            (activity as MainActivity).loadFragment(QuizFragment())
-        }
-    }
-
-    private fun clearNavSelection() {
-        val mutedColor = resources.getColor(R.color.text_muted, null)
-        navIconAllCountries.setColorFilter(mutedColor)
-        navIconFavorites.setColorFilter(mutedColor)
-        navIconCompare.setColorFilter(mutedColor)
-        navIconRandom.setColorFilter(mutedColor)
-        navIconQuiz.setColorFilter(mutedColor)
     }
 
     private fun getContinentCounts(countries: List<com.example.countries.Country>): Map<String, Int> {

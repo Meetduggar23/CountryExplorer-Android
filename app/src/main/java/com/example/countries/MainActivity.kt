@@ -5,7 +5,9 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -30,8 +32,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var viewModel: CountryViewModel
     private lateinit var toolbar: Toolbar
     private lateinit var toggle: ActionBarDrawerToggle
+    private lateinit var bottomNavContainer: LinearLayout
+    private lateinit var navIconAllCountries: ImageView
+    private lateinit var navIconFavorites: ImageView
+    private lateinit var navIconCompare: ImageView
+    private lateinit var navIconRandom: ImageView
+    private lateinit var navIconQuiz: ImageView
     val imageCache = mutableMapOf<String, Bitmap>()
     private var currentFragmentTag: String = "home"
+
+    private val bottomNavFragments = setOf("home", "all_countries", "favorites", "compare", "random", "quiz")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         ThemeHelper.applyTheme(this)
@@ -44,6 +54,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         drawerLayout = findViewById(R.id.drawerLayout)
         navigationView = findViewById(R.id.navigationView)
+        bottomNavContainer = findViewById(R.id.bottomNavContainer)
+
+        navIconAllCountries = findViewById(R.id.navIconAllCountries)
+        navIconFavorites = findViewById(R.id.navIconFavorites)
+        navIconCompare = findViewById(R.id.navIconCompare)
+        navIconRandom = findViewById(R.id.navIconRandom)
+        navIconQuiz = findViewById(R.id.navIconQuiz)
 
         toggle = ActionBarDrawerToggle(
             this, drawerLayout, toolbar,
@@ -66,6 +83,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
         }
 
+        setupBottomNav()
+
         val themeItem = navigationView.menu.findItem(R.id.nav_theme)
         themeItem?.title = if (ThemeHelper.isDarkTheme(this)) "Dark Theme" else "Light Theme"
 
@@ -75,6 +94,53 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             loadFragment(HomeFragment())
             navigationView.setCheckedItem(R.id.nav_home)
         }
+    }
+
+    private fun setupBottomNav() {
+        bottomNavContainer.findViewById<View>(R.id.navAllCountries).setOnClickListener {
+            loadFragment(AllCountriesFragment())
+            supportActionBar?.title = "All Countries"
+            navigationView.setCheckedItem(R.id.nav_all_countries)
+        }
+
+        bottomNavContainer.findViewById<View>(R.id.navFavorites).setOnClickListener {
+            loadFragment(FavoritesFragment())
+            supportActionBar?.title = "Favorites"
+            navigationView.setCheckedItem(R.id.nav_favorites)
+        }
+
+        bottomNavContainer.findViewById<View>(R.id.navCompare).setOnClickListener {
+            loadFragment(CompareFragment())
+            supportActionBar?.title = "Compare"
+            navigationView.setCheckedItem(R.id.nav_compare)
+        }
+
+        bottomNavContainer.findViewById<View>(R.id.navRandom).setOnClickListener {
+            loadFragment(RandomCountryFragment())
+            supportActionBar?.title = "Random Country"
+            navigationView.setCheckedItem(R.id.nav_random)
+        }
+
+        bottomNavContainer.findViewById<View>(R.id.navQuiz).setOnClickListener {
+            loadFragment(QuizFragment())
+            supportActionBar?.title = "Country Quiz"
+            navigationView.setCheckedItem(R.id.nav_quiz)
+        }
+    }
+
+    private fun updateBottomNavSelection() {
+        val selectedColor = resources.getColor(R.color.accent_red, null)
+        val unselectedColor = resources.getColor(R.color.text_muted, null)
+
+        navIconAllCountries.setColorFilter(if (currentFragmentTag == "all_countries") selectedColor else unselectedColor)
+        navIconFavorites.setColorFilter(if (currentFragmentTag == "favorites") selectedColor else unselectedColor)
+        navIconCompare.setColorFilter(if (currentFragmentTag == "compare") selectedColor else unselectedColor)
+        navIconRandom.setColorFilter(if (currentFragmentTag == "random") selectedColor else unselectedColor)
+        navIconQuiz.setColorFilter(if (currentFragmentTag == "quiz") selectedColor else unselectedColor)
+    }
+
+    private fun updateBottomNavVisibility() {
+        bottomNavContainer.visibility = if (currentFragmentTag in bottomNavFragments) View.VISIBLE else View.GONE
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -148,6 +214,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
         currentFragmentTag = tag
         updateNavigationIcon()
+        updateBottomNavVisibility()
+        updateBottomNavSelection()
     }
 
     override fun onBackPressed() {
