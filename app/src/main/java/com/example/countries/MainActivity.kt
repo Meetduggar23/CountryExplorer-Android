@@ -79,7 +79,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 currentFragmentTag = "home"
                 navigationView.setCheckedItem(R.id.nav_home)
                 supportActionBar?.title = "Country Explorer"
-                toolbar.navigationIcon = null
+                updateNavigationIcon()
             }
         }
 
@@ -183,8 +183,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private fun updateNavigationIcon() {
         if (currentFragmentTag == "home") {
-            toolbar.navigationIcon = null
+            toggle.isDrawerIndicatorEnabled = true
+            toggle.syncState()
         } else {
+            toggle.isDrawerIndicatorEnabled = false
             toolbar.setNavigationIcon(R.drawable.ic_back)
         }
     }
