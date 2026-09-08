@@ -155,7 +155,6 @@ class AllCountriesFragment : Fragment() {
             emptyList(),
             imageCache,
             onClick = { country ->
-                pinManager.addPin(country.cca3)
                 viewModel.recentlyViewedManager.addCountry(country.cca3)
                 val intent = Intent(requireContext(), CountryDetailActivity::class.java)
                 intent.putExtra("country", country)

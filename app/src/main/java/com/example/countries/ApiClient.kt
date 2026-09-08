@@ -177,9 +177,17 @@ class ApiClient {
             }
         }
 
+        // The API reports "Americas" as the region, but continents are
+        // North America / South America. Map it so the Continents page and
+        // quiz continent questions include the American countries.
         val continents = mutableListOf<String>()
-        if (region.isNotEmpty() && region != "Not available") {
-            continents.add(region)
+        when (region) {
+            "Americas" -> {
+                continents.add("North America")
+                continents.add("South America")
+            }
+            "", "Not available" -> { /* leave empty */ }
+            else -> continents.add(region)
         }
 
         val borders = mutableListOf<String>()

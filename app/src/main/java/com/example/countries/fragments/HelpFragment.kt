@@ -52,7 +52,7 @@ class HelpFragment : Fragment() {
 
         val titleView = TextView(requireContext()).apply {
             text = title
-            setTextColor(resources.getColor(R.color.white, null))
+            setTextColor(resources.getColor(R.color.text_white, null))
             textSize = 16f
             setPadding(0, 0, 0, dpToPx(4))
         }

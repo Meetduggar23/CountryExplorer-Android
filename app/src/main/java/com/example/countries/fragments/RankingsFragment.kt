@@ -58,7 +58,9 @@ class RankingsFragment : Fragment() {
 
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                if (dy > 0) scrollUpFab.show() else if (dy < 0) scrollUpFab.show()
+                val layoutManager = recyclerView.layoutManager as? LinearLayoutManager ?: return
+                val firstVisible = layoutManager.findFirstCompletelyVisibleItemPosition()
+                if (firstVisible > 3) scrollUpFab.show() else scrollUpFab.hide()
             }
         })
 
@@ -196,6 +198,8 @@ class RankingsFragment : Fragment() {
                 holder.flagImage.tag = country.flagUrl
                 val activity = holder.itemView.context as? MainActivity
                 activity?.loadImage(country.flagUrl, holder.flagImage)
+            } else {
+                holder.flagImage.setImageResource(R.drawable.bg_placeholder_flag)
             }
         }
 

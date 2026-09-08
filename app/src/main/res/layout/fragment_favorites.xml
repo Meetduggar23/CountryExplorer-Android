@@ -144,16 +144,15 @@
                 android:gravity="center" />
         </LinearLayout>
 
-        <!-- Scroll to Top FAB -->
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/scrollUpFab"
             android:layout_width="56dp"
             android:layout_height="56dp"
             android:layout_gravity="bottom|end"
             android:layout_margin="16dp"
-            android:layout_marginBottom="16dp"
             android:contentDescription="Scroll to top"
-            android:src="@drawable/ic_back"
+            android:src="@drawable/ic_chevron_right"
+            android:rotation="270"
             android:visibility="gone"
             app:backgroundTint="@color/accent_red"
             app:fabSize="normal"

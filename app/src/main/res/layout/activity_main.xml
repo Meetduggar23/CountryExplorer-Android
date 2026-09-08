@@ -15,24 +15,6 @@
         android:fitsSystemWindows="true"
         android:orientation="vertical">
 
-        <LinearLayout
-            android:id="@+id/offlineBanner"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:background="@color/accent_red"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:visibility="gone">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="You're offline"
-                android:textColor="@color/text_white"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-        </LinearLayout>
-
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
@@ -47,6 +29,12 @@
             android:layout_height="0dp"
             android:layout_weight="1" />
 
+        <!-- Divider above the bottom navigation bar -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/divider" />
+
         <!-- Bottom Navigation Bar -->
         <LinearLayout
             android:id="@+id/bottomNavContainer"
@@ -56,12 +44,6 @@
             android:elevation="8dp"
             android:orientation="horizontal"
             android:paddingBottom="0dp">
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_gravity="top"
-                android:background="@color/divider" />
 
             <!-- All Countries -->
             <LinearLayout
@@ -78,7 +60,7 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/ic_language"
-                    android:tint="@color/text_muted"
+                    android:tint="@color/bottom_nav_icon"
                     tools:ignore="ContentDescription" />
             </LinearLayout>
 
@@ -97,7 +79,7 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/ic_star"
-                    android:tint="@color/text_muted"
+                    android:tint="@color/bottom_nav_icon"
                     tools:ignore="ContentDescription" />
             </LinearLayout>
 
@@ -116,7 +98,7 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/ic_compare"
-                    android:tint="@color/text_muted"
+                    android:tint="@color/bottom_nav_icon"
                     tools:ignore="ContentDescription" />
             </LinearLayout>
 
@@ -135,7 +117,7 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/ic_random"
-                    android:tint="@color/text_muted"
+                    android:tint="@color/bottom_nav_icon"
                     tools:ignore="ContentDescription" />
             </LinearLayout>
 
@@ -154,7 +136,7 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/ic_quiz"
-                    android:tint="@color/text_muted"
+                    android:tint="@color/bottom_nav_icon"
                     tools:ignore="ContentDescription" />
             </LinearLayout>
         </LinearLayout>

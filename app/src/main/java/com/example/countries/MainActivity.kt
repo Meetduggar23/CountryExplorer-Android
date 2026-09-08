@@ -10,6 +10,7 @@ import android.widget.LinearLayout
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -41,7 +42,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     val imageCache = mutableMapOf<String, Bitmap>()
     private var currentFragmentTag: String = "home"
 
-    private val bottomNavFragments = setOf("home", "all_countries", "favorites", "compare", "random", "quiz")
+    // The bottom navigation bar is visible on every page of the app.
 
     override fun onCreate(savedInstanceState: Bundle?) {
         ThemeHelper.applyTheme(this)
@@ -135,8 +136,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun updateBottomNavSelection() {
-        val selectedColor = resources.getColor(R.color.accent_red, null)
-        val unselectedColor = resources.getColor(R.color.text_muted, null)
+        // Theme-aware colors: dark icon in light theme, light icon in dark
+        // theme; selected item is highlighted with the accent color.
+        val selectedColor = ContextCompat.getColor(this, R.color.accent_red)
+        val unselectedColor = ContextCompat.getColor(this, R.color.bottom_nav_icon)
 
         navIconAllCountries.setColorFilter(if (currentFragmentTag == "all_countries") selectedColor else unselectedColor)
         navIconFavorites.setColorFilter(if (currentFragmentTag == "favorites") selectedColor else unselectedColor)
@@ -146,7 +149,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun updateBottomNavVisibility() {
-        bottomNavContainer.visibility = if (currentFragmentTag in bottomNavFragments) View.VISIBLE else View.GONE
+        // Always visible: the bottom bar is shown on every page.
+        bottomNavContainer.visibility = View.VISIBLE
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -179,7 +183,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         fragment?.let {
             loadFragment(it)
             supportActionBar?.title = item.title
-            currentFragmentTag = item.itemId.toString()
             updateNavigationIcon()
         }
 

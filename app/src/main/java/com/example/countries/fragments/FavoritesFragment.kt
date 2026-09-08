@@ -17,6 +17,7 @@ import com.example.countries.CountryDetailActivity
 import com.example.countries.CountryViewModel
 import com.example.countries.CountriesUiState
 import com.example.countries.FavoriteManager
+import com.example.countries.MainActivity
 import com.example.countries.R
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
@@ -56,7 +57,8 @@ class FavoritesFragment : Fragment() {
         scrollUpFab = view.findViewById(R.id.scrollUpFab)
         val clearAllButton = view.findViewById<View>(R.id.clearAllButton)
 
-        val imageCache = mutableMapOf<String, android.graphics.Bitmap>()
+        val imageCache: MutableMap<String, android.graphics.Bitmap> =
+            (activity as? MainActivity)?.imageCache ?: mutableMapOf()
         adapter = CountryAdapter(emptyList(), imageCache, { country ->
             val intent = android.content.Intent(requireContext(), CountryDetailActivity::class.java)
             intent.putExtra("country", country)
@@ -72,7 +74,9 @@ class FavoritesFragment : Fragment() {
 
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                if (dy > 0) scrollUpFab.show() else if (dy < 0) scrollUpFab.show()
+                val layoutManager = recyclerView.layoutManager as? LinearLayoutManager ?: return
+                val firstVisible = layoutManager.findFirstCompletelyVisibleItemPosition()
+                if (firstVisible > 3) scrollUpFab.show() else scrollUpFab.hide()
             }
         })
 

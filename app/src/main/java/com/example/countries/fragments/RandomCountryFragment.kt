@@ -15,6 +15,7 @@ import com.example.countries.CountryDetailActivity
 import com.example.countries.CountryViewModel
 import com.example.countries.CountriesUiState
 import com.example.countries.FavoriteManager
+import com.example.countries.MainActivity
 import com.example.countries.R
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -87,6 +88,10 @@ class RandomCountryFragment : Fragment() {
                     }
                     is CountriesUiState.Error -> {
                         countryName.text = "Unable to load country data"
+                        capitalText.text = ""
+                        regionText.text = ""
+                        populationText.text = ""
+                        btnRandom.isEnabled = false
                     }
                     else -> {}
                 }
@@ -96,6 +101,14 @@ class RandomCountryFragment : Fragment() {
 
     private fun displayCountry(view: View) {
         val country = currentCountry ?: return
+
+        val flagImage = view.findViewById<ImageView>(R.id.flagImageView)
+        if (country.flagUrl.isNotEmpty()) {
+            (activity as? MainActivity)?.loadImage(country.flagUrl, flagImage)
+        } else {
+            flagImage.setImageResource(R.drawable.bg_placeholder_flag)
+        }
+
         view.findViewById<TextView>(R.id.countryNameText)?.text = country.commonName
         view.findViewById<TextView>(R.id.capitalText)?.text = "Capital: ${country.capital}"
         view.findViewById<TextView>(R.id.regionBadge)?.text = "Region: ${country.region}"

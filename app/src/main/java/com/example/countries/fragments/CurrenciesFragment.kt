@@ -1,9 +1,13 @@
 package com.example.countries.fragments
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -20,6 +24,7 @@ import kotlinx.coroutines.launch
 class CurrenciesFragment : Fragment() {
 
     private lateinit var viewModel: CountryViewModel
+    private var searchQuery = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,7 +39,23 @@ class CurrenciesFragment : Fragment() {
         viewModel = ViewModelProvider(requireActivity())[CountryViewModel::class.java]
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
-        val emptyState = view.findViewById<TextView>(R.id.emptyState)
+        val emptyState = view.findViewById<View>(R.id.emptyState)
+        val emptyStateText = view.findViewById<TextView>(R.id.emptyStateText)
+        val searchEditText = view.findViewById<EditText>(R.id.searchEditText)
+        val clearSearchButton = view.findViewById<ImageView>(R.id.clearSearchButton)
+
+        searchEditText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                searchQuery = s?.toString() ?: ""
+                clearSearchButton.visibility = if (searchQuery.isNotEmpty()) View.VISIBLE else View.GONE
+            }
+            override fun afterTextChanged(s: Editable?) {}
+        })
+
+        clearSearchButton.setOnClickListener {
+            searchEditText.text.clear()
+        }
 
         val currencyData = mutableListOf<Triple<String, String, Int>>()
         val adapter = CurrencyAdapter(currencyData) { currencyName ->
@@ -58,14 +79,19 @@ class CurrenciesFragment : Fragment() {
                                 }
                             }
                             currencyData.clear()
-                            currencyMap.entries.sortedBy { it.key }.forEach { (curr, countries) ->
-                                currencyData.add(Triple(curr, "", countries.size))
-                            }
+                            val query = searchQuery.trim().lowercase()
+                            currencyMap.entries.sortedBy { it.key }
+                                .filter { query.isEmpty() || it.key.lowercase().contains(query) }
+                                .forEach { (curr, countries) ->
+                                    currencyData.add(Triple(curr, "", countries.size))
+                                }
                             adapter.notifyDataSetChanged()
 
                             if (currencyData.isEmpty()) {
                                 emptyState.visibility = View.VISIBLE
                                 recyclerView.visibility = View.GONE
+                                emptyStateText.text = if (query.isEmpty()) "No currencies found"
+                                else "No currencies match \"$query\""
                             } else {
                                 emptyState.visibility = View.GONE
                                 recyclerView.visibility = View.VISIBLE

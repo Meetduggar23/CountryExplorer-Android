@@ -1,9 +1,13 @@
 package com.example.countries.fragments
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -20,6 +24,7 @@ import kotlinx.coroutines.launch
 class LanguagesFragment : Fragment() {
 
     private lateinit var viewModel: CountryViewModel
+    private var searchQuery = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,7 +39,23 @@ class LanguagesFragment : Fragment() {
         viewModel = ViewModelProvider(requireActivity())[CountryViewModel::class.java]
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
-        val emptyState = view.findViewById<TextView>(R.id.emptyState)
+        val emptyState = view.findViewById<View>(R.id.emptyState)
+        val emptyStateText = view.findViewById<TextView>(R.id.emptyStateText)
+        val searchEditText = view.findViewById<EditText>(R.id.searchEditText)
+        val clearSearchButton = view.findViewById<ImageView>(R.id.clearSearchButton)
+
+        searchEditText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                searchQuery = s?.toString() ?: ""
+                clearSearchButton.visibility = if (searchQuery.isNotEmpty()) View.VISIBLE else View.GONE
+            }
+            override fun afterTextChanged(s: Editable?) {}
+        })
+
+        clearSearchButton.setOnClickListener {
+            searchEditText.text.clear()
+        }
 
         val languageData = mutableListOf<Triple<String, String, Int>>()
         val adapter = LanguageAdapter(languageData) { language ->
@@ -58,17 +79,22 @@ class LanguagesFragment : Fragment() {
                                 }
                             }
                             languageData.clear()
-                            languageMap.entries.sortedBy { it.key }.forEach { (lang, countries) ->
-                                val firstCode = state.countries.firstOrNull {
-                                    it.languages.lowercase().contains(lang.lowercase())
-                                }?.languages?.split(", ")?.firstOrNull { it.equals(lang, ignoreCase = true) } ?: ""
-                                languageData.add(Triple(lang, firstCode, countries.size))
-                            }
+                            val query = searchQuery.trim().lowercase()
+                            languageMap.entries.sortedBy { it.key }
+                                .filter { query.isEmpty() || it.key.lowercase().contains(query) }
+                                .forEach { (lang, countries) ->
+                                    val firstCode = state.countries.firstOrNull {
+                                        it.languages.lowercase().contains(lang.lowercase())
+                                    }?.languages?.split(", ")?.firstOrNull { it.equals(lang, ignoreCase = true) } ?: ""
+                                    languageData.add(Triple(lang, firstCode, countries.size))
+                                }
                             adapter.notifyDataSetChanged()
 
                             if (languageData.isEmpty()) {
                                 emptyState.visibility = View.VISIBLE
                                 recyclerView.visibility = View.GONE
+                                emptyStateText.text = if (query.isEmpty()) "No languages found"
+                                else "No languages match \"$query\""
                             } else {
                                 emptyState.visibility = View.GONE
                                 recyclerView.visibility = View.VISIBLE

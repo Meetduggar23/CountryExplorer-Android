@@ -56,7 +56,8 @@ class RecentlyViewedFragment : Fragment() {
         scrollUpFab = view.findViewById(R.id.scrollUpFab)
         val clearButton = view.findViewById<TextView>(R.id.clearButton)
 
-        val imageCache = mutableMapOf<String, android.graphics.Bitmap>()
+        val imageCache: MutableMap<String, android.graphics.Bitmap> =
+            (activity as? MainActivity)?.imageCache ?: mutableMapOf()
         adapter = CountryAdapter(emptyList(), imageCache, { country ->
             val intent = android.content.Intent(requireContext(), CountryDetailActivity::class.java)
             intent.putExtra("country", country)
@@ -76,7 +77,9 @@ class RecentlyViewedFragment : Fragment() {
 
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                if (dy > 0) scrollUpFab.show() else if (dy < 0) scrollUpFab.show()
+                val layoutManager = recyclerView.layoutManager as? LinearLayoutManager ?: return
+                val firstVisible = layoutManager.findFirstCompletelyVisibleItemPosition()
+                if (firstVisible > 3) scrollUpFab.show() else scrollUpFab.hide()
             }
         })
 
@@ -128,6 +131,23 @@ class RecentlyViewedFragment : Fragment() {
                     }
                     else -> {}
                 }
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Refresh the list so countries viewed while away appear immediately
+        val state = viewModel.uiState.value
+        if (state is CountriesUiState.Success) {
+            val recent = recentlyViewedManager.getRecentlyViewed(state.countries)
+            if (recent.isEmpty()) {
+                emptyState.visibility = View.VISIBLE
+                recyclerView.visibility = View.GONE
+            } else {
+                emptyState.visibility = View.GONE
+                recyclerView.visibility = View.VISIBLE
+                adapter.updateData(recent)
             }
         }
     }

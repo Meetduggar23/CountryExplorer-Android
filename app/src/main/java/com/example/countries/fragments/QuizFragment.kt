@@ -29,6 +29,7 @@ class QuizFragment : Fragment() {
     private lateinit var quizQuestion: TextView
     private lateinit var quizScore: TextView
     private lateinit var quizProgress: ProgressBar
+    private lateinit var questionNumberText: TextView
     private lateinit var btnOption1: Button
     private lateinit var btnOption2: Button
     private lateinit var btnOption3: Button
@@ -36,6 +37,7 @@ class QuizFragment : Fragment() {
     private lateinit var btnNext: Button
     private lateinit var btnRestart: Button
     private lateinit var resultContainer: View
+    private lateinit var resultText: TextView
 
     data class QuizQuestion(
         val question: String,
@@ -58,6 +60,8 @@ class QuizFragment : Fragment() {
         quizQuestion = view.findViewById(R.id.quizQuestion)
         quizScore = view.findViewById(R.id.scoreText)
         quizProgress = view.findViewById(R.id.quizProgress)
+        questionNumberText = view.findViewById(R.id.questionNumberText)
+        resultText = view.findViewById(R.id.resultText)
         btnOption1 = view.findViewById(R.id.btnOption1)
         btnOption2 = view.findViewById(R.id.btnOption2)
         btnOption3 = view.findViewById(R.id.btnOption3)
@@ -140,14 +144,19 @@ class QuizFragment : Fragment() {
     }
 
     private fun displayQuestion() {
-        if (currentQuestionIndex >= questions.size) return
+        if (questions.isEmpty() || currentQuestionIndex >= questions.size) return
         val q = questions[currentQuestionIndex]
 
         quizQuestion.text = q.question
         quizScore.text = "Score: $score / ${questions.size}"
         quizProgress.max = questions.size
-        quizProgress.progress = currentQuestionIndex
+        quizProgress.progress = currentQuestionIndex + 1
+        questionNumberText.text = "Question ${currentQuestionIndex + 1} of ${questions.size}"
 
+        btnOption1.visibility = View.VISIBLE
+        btnOption2.visibility = View.VISIBLE
+        btnOption3.visibility = View.VISIBLE
+        btnOption4.visibility = View.VISIBLE
         btnOption1.text = q.options[0]
         btnOption2.text = q.options[1]
         btnOption3.text = q.options[2]
@@ -155,6 +164,7 @@ class QuizFragment : Fragment() {
 
         resultContainer.visibility = View.GONE
         btnNext.visibility = View.GONE
+        btnRestart.visibility = View.GONE
         setOptionsEnabled(true)
     }
 
@@ -184,9 +194,9 @@ class QuizFragment : Fragment() {
         btnNext.visibility = View.GONE
         btnRestart.visibility = View.VISIBLE
 
-        val resultText = view?.findViewById<TextView>(R.id.resultText)
-        resultText?.text = "Quiz Complete!\nScore: $score / ${questions.size}"
+        resultText.text = "Quiz Complete!\nScore: $score / ${questions.size}"
         quizQuestion.text = "Results"
+        questionNumberText.text = ""
         quizProgress.progress = questions.size
     }
 }

@@ -31,7 +31,13 @@ class AboutFragment : Fragment() {
 
         try {
             val packageInfo = requireContext().packageManager.getPackageInfo(requireContext().packageName, 0)
-            versionText.text = "Version ${packageInfo.versionName} (Build ${packageInfo.longVersionCode})"
+            val versionCode = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
+                packageInfo.longVersionCode
+            } else {
+                @Suppress("DEPRECATION")
+                packageInfo.versionCode.toLong()
+            }
+            versionText.text = "Version ${packageInfo.versionName} (Build $versionCode)"
         } catch (e: PackageManager.NameNotFoundException) {
             versionText.text = "Version 1.0"
         }

@@ -7,7 +7,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlin.random.Random
 
 sealed class CountriesUiState {
     object Loading : CountriesUiState()
@@ -79,35 +78,6 @@ class CountryViewModel(application: Application) : AndroidViewModel(application)
         loadCountries()
     }
 
-    fun getFilteredCountries(): List<Country> {
-        return when (val state = _uiState.value) {
-            is CountriesUiState.Success -> state.countries
-            else -> _allCountries
-        }
-    }
-
-    fun getCountriesByContinent(continent: String): List<Country> {
-        return _allCountries.filter { it.continents.any { c -> c.equals(continent, ignoreCase = true) } }
-    }
-
-    fun getCountriesByRegion(region: String): List<Country> {
-        return _allCountries.filter { it.region.equals(region, ignoreCase = true) }
-    }
-
-    fun getCountriesByLanguage(language: String): List<Country> {
-        return _allCountries.filter {
-            it.languages.split(", ").any { lang ->
-                lang.equals(language, ignoreCase = true)
-            }
-        }
-    }
-
-    fun getCountriesByCurrency(currency: String): List<Country> {
-        return _allCountries.filter {
-            it.currencies.contains(currency, ignoreCase = true)
-        }
-    }
-
     fun getRankings(type: String, ascending: Boolean = false): List<Country> {
         return when (type.lowercase()) {
             "population" -> {
@@ -124,11 +94,6 @@ class CountryViewModel(application: Application) : AndroidViewModel(application)
             }
             else -> _allCountries
         }
-    }
-
-    fun getRandomCountry(): Country? {
-        if (_allCountries.isEmpty()) return null
-        return _allCountries[Random.nextInt(_allCountries.size)]
     }
 
     fun getNeighbors(country: Country): List<Country> {

@@ -7,13 +7,11 @@
     <string name="nav_regions">Regions</string>
     <string name="nav_languages">Languages</string>
     <string name="nav_currencies">Currencies</string>
-    <string name="nav_neighbors">Neighbor Countries</string>
     <string name="nav_compare">Compare Countries</string>
     <string name="nav_random">Random Country</string>
     <string name="nav_quiz">Country Quiz</string>
     <string name="nav_rankings">Rankings</string>
     <string name="nav_recently">Recently Viewed</string>
-    <string name="nav_share">Share / Export</string>
     <string name="nav_help">Help</string>
     <string name="nav_about">About</string>
 </resources>
