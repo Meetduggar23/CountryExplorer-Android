@@ -6,13 +6,15 @@
     android:background="@color/primary_dark_navy"
     android:orientation="vertical">
 
+    <!-- Toolbar -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="48dp"
         android:background="@color/status_bar_color"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingHorizontal="4dp">
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp">
 
         <ImageView
             android:id="@+id/backButton"
@@ -28,16 +30,17 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginStart="4dp"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:text="Country Details"
             android:textColor="@color/text_white"
-            android:textSize="18sp"
+            android:textSize="17sp"
             android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/pinButton"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_marginEnd="4dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Pin"
             android:padding="8dp"
@@ -47,56 +50,39 @@
             android:id="@+id/favButton"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_marginEnd="4dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Favorite"
             android:padding="8dp"
             android:src="@drawable/ic_star" />
 
         <ImageView
-            android:id="@+id/copyNameBtn"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginEnd="4dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Copy name"
-            android:padding="8dp"
-            android:src="@drawable/ic_copy" />
-
-        <ImageView
-            android:id="@+id/copyCodeBtn"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginEnd="4dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Copy code"
-            android:padding="8dp"
-            android:src="@drawable/ic_copy" />
-
-        <ImageView
             android:id="@+id/shareButton"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_marginEnd="4dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Share"
             android:padding="8dp"
             android:src="@drawable/ic_share" />
 
         <ImageView
-            android:id="@+id/copyButton"
+            android:id="@+id/overflowMenuBtn"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Copy"
+            android:contentDescription="More options"
             android:padding="8dp"
-            android:src="@drawable/ic_copy" />
+            android:src="@drawable/ic_more_vert" />
     </LinearLayout>
 
+    <!-- Scrollable content -->
     <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:overScrollMode="never">
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true"
+        android:overScrollMode="never"
+        android:clipToPadding="false">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -104,142 +90,158 @@
             android:orientation="vertical"
             android:paddingHorizontal="16dp"
             android:paddingTop="12dp"
-            android:paddingBottom="32dp">
+            android:paddingBottom="24dp">
 
-            <!-- Summary Stats Row -->
+            <!-- Summary Stats — 2-column grid -->
             <LinearLayout
                 android:id="@+id/summaryContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
-                <!-- Population Card -->
+                <!-- Row 1: Population + Area -->
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="4dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_detail_item"
-                    android:orientation="vertical"
-                    android:padding="8dp">
+                    android:layout_marginBottom="8dp"
+                    android:orientation="horizontal">
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="Population"
-                        android:textColor="@color/text_muted"
-                        android:textSize="10sp" />
+                        android:layout_marginEnd="4dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_detail_item"
+                        android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/summaryPopulation"
-                        android:layout_width="wrap_content"
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Population"
+                            android:textColor="@color/text_muted"
+                            android:textSize="11sp" />
+
+                        <TextView
+                            android:id="@+id/summaryPopulation"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:textColor="@color/text_white"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/text_white"
-                        android:textSize="13sp" />
+                        android:layout_marginStart="4dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_detail_item"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Area"
+                            android:textColor="@color/text_muted"
+                            android:textSize="11sp" />
+
+                        <TextView
+                            android:id="@+id/summaryArea"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:textColor="@color/text_white"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
                 </LinearLayout>
 
-                <!-- Area Card -->
+                <!-- Row 2: Region + Capital -->
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="4dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_detail_item"
-                    android:orientation="vertical"
-                    android:padding="8dp">
+                    android:layout_marginBottom="8dp"
+                    android:orientation="horizontal">
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="Area"
-                        android:textColor="@color/text_muted"
-                        android:textSize="10sp" />
+                        android:layout_marginEnd="4dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_detail_item"
+                        android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/summaryArea"
-                        android:layout_width="wrap_content"
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Region"
+                            android:textColor="@color/text_muted"
+                            android:textSize="11sp" />
+
+                        <TextView
+                            android:id="@+id/summaryRegion"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:textColor="@color/text_white"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/text_white"
-                        android:textSize="13sp" />
+                        android:layout_marginStart="4dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_detail_item"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Capital"
+                            android:textColor="@color/text_muted"
+                            android:textSize="11sp" />
+
+                        <TextView
+                            android:id="@+id/summaryCapital"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:textColor="@color/text_white"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
                 </LinearLayout>
 
-                <!-- Region Card -->
+                <!-- Row 3: Currency (full width) -->
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="4dp"
-                    android:layout_weight="1"
                     android:background="@drawable/bg_detail_item"
-                    android:orientation="vertical"
-                    android:padding="8dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Region"
-                        android:textColor="@color/text_muted"
-                        android:textSize="10sp" />
-
-                    <TextView
-                        android:id="@+id/summaryRegion"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/text_white"
-                        android:textSize="13sp" />
-                </LinearLayout>
-
-                <!-- Capital Card -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="4dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_detail_item"
-                    android:orientation="vertical"
-                    android:padding="8dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Capital"
-                        android:textColor="@color/text_muted"
-                        android:textSize="10sp" />
-
-                    <TextView
-                        android:id="@+id/summaryCapital"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/text_white"
-                        android:textSize="13sp" />
-                </LinearLayout>
-
-                <!-- Currency Card -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_detail_item"
-                    android:orientation="vertical"
-                    android:padding="8dp">
+                    android:orientation="vertical">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Currency"
                         android:textColor="@color/text_muted"
-                        android:textSize="10sp" />
+                        android:textSize="11sp" />
 
                     <TextView
                         android:id="@+id/summaryCurrency"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
                         android:textColor="@color/text_white"
-                        android:textSize="13sp" />
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
                 </LinearLayout>
             </LinearLayout>
 
+            <!-- Flag Card -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -270,136 +272,336 @@
                 </FrameLayout>
             </androidx.cardview.widget.CardView>
 
+            <!-- Country Name -->
             <TextView
                 android:id="@+id/countryNameText"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp"
                 android:textColor="@color/text_white"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
+            <!-- Official Name -->
             <TextView
                 android:id="@+id/officialNameText"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="20dp"
                 android:textColor="@color/text_muted"
                 android:textSize="13sp" />
 
+            <!-- General Information -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:text="General Information"
                 android:textColor="@color/accent_yellow"
-                android:textSize="13sp"
+                android:textSize="14sp"
                 android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
+                android:layout_marginBottom="16dp"
                 android:background="@drawable/bg_detail_card"
                 android:orientation="vertical"
-                android:padding="14dp">
+                android:padding="16dp">
 
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Capital" android:textColor="@color/text_muted" android:textSize="11sp" />
-                <TextView android:id="@+id/capitalValue" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="@color/text_white" android:textSize="14sp" android:layout_marginBottom="10dp" />
-                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/divider" android:layout_marginBottom="10dp" />
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Region" android:textColor="@color/text_muted" android:textSize="11sp" />
-                <TextView android:id="@+id/regionValue" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="@color/text_white" android:textSize="14sp" android:layout_marginBottom="10dp" />
-                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/divider" android:layout_marginBottom="10dp" />
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Subregion" android:textColor="@color/text_muted" android:textSize="11sp" />
-                <TextView android:id="@+id/subregionValue" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="@color/text_white" android:textSize="14sp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Capital"
+                    android:textColor="@color/text_muted"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/capitalValue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:textColor="@color/text_white"
+                    android:textSize="15sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginVertical="10dp"
+                    android:background="@color/divider" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Region"
+                    android:textColor="@color/text_muted"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/regionValue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:textColor="@color/text_white"
+                    android:textSize="15sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginVertical="10dp"
+                    android:background="@color/divider" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Subregion"
+                    android:textColor="@color/text_muted"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/subregionValue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:textColor="@color/text_white"
+                    android:textSize="15sp" />
             </LinearLayout>
 
+            <!-- Statistics -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:text="Statistics"
                 android:textColor="@color/accent_yellow"
-                android:textSize="13sp"
+                android:textSize="14sp"
                 android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
+                android:layout_marginBottom="16dp"
                 android:background="@drawable/bg_detail_card"
                 android:orientation="vertical"
-                android:padding="14dp">
+                android:padding="16dp">
 
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Population" android:textColor="@color/text_muted" android:textSize="11sp" />
-                <TextView android:id="@+id/populationValue" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="@color/text_white" android:textSize="14sp" android:layout_marginBottom="10dp" />
-                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/divider" android:layout_marginBottom="10dp" />
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Area" android:textColor="@color/text_muted" android:textSize="11sp" />
-                <TextView android:id="@+id/areaValue" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="@color/text_white" android:textSize="14sp" android:layout_marginBottom="10dp" />
-                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/divider" android:layout_marginBottom="10dp" />
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Country Codes" android:textColor="@color/text_muted" android:textSize="11sp" />
-                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:orientation="horizontal">
-                    <TextView android:id="@+id/code2Value" android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="@drawable/bg_badge" android:paddingHorizontal="8dp" android:paddingVertical="2dp" android:textColor="@color/primary_dark_navy" android:textSize="12sp" android:textStyle="bold" />
-                    <TextView android:id="@+id/code3Value" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="6dp" android:background="@drawable/bg_badge" android:paddingHorizontal="8dp" android:paddingVertical="2dp" android:textColor="@color/primary_dark_navy" android:textSize="12sp" android:textStyle="bold" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Population"
+                    android:textColor="@color/text_muted"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/populationValue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:textColor="@color/text_white"
+                    android:textSize="15sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginVertical="10dp"
+                    android:background="@color/divider" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Area"
+                    android:textColor="@color/text_muted"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/areaValue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:textColor="@color/text_white"
+                    android:textSize="15sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginVertical="10dp"
+                    android:background="@color/divider" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Country Codes"
+                    android:textColor="@color/text_muted"
+                    android:textSize="12sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/code2Value"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_badge"
+                        android:paddingHorizontal="10dp"
+                        android:paddingVertical="4dp"
+                        android:textColor="@color/badge_text_dark"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/code3Value"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/bg_badge"
+                        android:paddingHorizontal="10dp"
+                        android:paddingVertical="4dp"
+                        android:textColor="@color/badge_text_dark"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
                 </LinearLayout>
             </LinearLayout>
 
+            <!-- Economy & Languages -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:text="Economy &amp; Languages"
                 android:textColor="@color/accent_yellow"
-                android:textSize="13sp"
+                android:textSize="14sp"
                 android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
+                android:layout_marginBottom="16dp"
                 android:background="@drawable/bg_detail_card"
                 android:orientation="vertical"
-                android:padding="14dp">
+                android:padding="16dp">
 
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Currencies" android:textColor="@color/text_muted" android:textSize="11sp" />
-                <TextView android:id="@+id/currenciesValue" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="@color/text_white" android:textSize="14sp" android:layout_marginBottom="10dp" />
-                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/divider" android:layout_marginBottom="10dp" />
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Languages" android:textColor="@color/text_muted" android:textSize="11sp" />
-                <TextView android:id="@+id/languagesValue" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="@color/text_white" android:textSize="14sp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Currencies"
+                    android:textColor="@color/text_muted"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/currenciesValue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:textColor="@color/text_white"
+                    android:textSize="15sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginVertical="10dp"
+                    android:background="@color/divider" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Languages"
+                    android:textColor="@color/text_muted"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/languagesValue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:textColor="@color/text_white"
+                    android:textSize="15sp" />
             </LinearLayout>
 
+            <!-- Time & Location -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:text="Time &amp; Location"
                 android:textColor="@color/accent_yellow"
-                android:textSize="13sp"
+                android:textSize="14sp"
                 android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
+                android:layout_marginBottom="16dp"
                 android:background="@drawable/bg_detail_card"
                 android:orientation="vertical"
-                android:padding="14dp">
+                android:padding="16dp">
 
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Timezones" android:textColor="@color/text_muted" android:textSize="11sp" />
-                <TextView android:id="@+id/timezonesValue" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="@color/text_white" android:textSize="14sp" android:layout_marginBottom="10dp" />
-                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/divider" android:layout_marginBottom="10dp" />
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Continents" android:textColor="@color/text_muted" android:textSize="11sp" />
-                <TextView android:id="@+id/continentsValue" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="@color/text_white" android:textSize="14sp" android:layout_marginBottom="10dp" />
-                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/divider" android:layout_marginBottom="10dp" />
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Borders" android:textColor="@color/text_muted" android:textSize="11sp" />
-                <TextView android:id="@+id/bordersValue" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="@color/text_white" android:textSize="14sp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Timezones"
+                    android:textColor="@color/text_muted"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/timezonesValue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:textColor="@color/text_white"
+                    android:textSize="15sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginVertical="10dp"
+                    android:background="@color/divider" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Continents"
+                    android:textColor="@color/text_muted"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/continentsValue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:textColor="@color/text_white"
+                    android:textSize="15sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginVertical="10dp"
+                    android:background="@color/divider" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Borders"
+                    android:textColor="@color/text_muted"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/bordersValue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:textColor="@color/text_white"
+                    android:textSize="15sp" />
             </LinearLayout>
 
+            <!-- Neighbor Countries -->
             <LinearLayout
                 android:id="@+id/neighborsContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
+                android:layout_marginBottom="16dp"
                 android:orientation="vertical"
                 android:visibility="gone">
 
@@ -409,7 +611,7 @@
                     android:layout_marginBottom="8dp"
                     android:text="Neighbor Countries"
                     android:textColor="@color/accent_yellow"
-                    android:textSize="13sp"
+                    android:textSize="14sp"
                     android:textStyle="bold" />
 
                 <LinearLayout
@@ -418,7 +620,7 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_detail_card"
                     android:orientation="vertical"
-                    android:padding="14dp" />
+                    android:padding="12dp" />
             </LinearLayout>
 
         </LinearLayout>

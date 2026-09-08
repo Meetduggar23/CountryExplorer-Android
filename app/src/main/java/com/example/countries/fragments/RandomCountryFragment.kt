@@ -77,12 +77,18 @@ class RandomCountryFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.uiState.collectLatest { state ->
-                if (state is CountriesUiState.Success) {
-                    allCountries = state.countries
-                    if (currentCountry == null && allCountries.isNotEmpty()) {
-                        currentCountry = allCountries.random()
-                        displayCountry(view)
+                when (state) {
+                    is CountriesUiState.Success -> {
+                        allCountries = state.countries
+                        if (currentCountry == null && allCountries.isNotEmpty()) {
+                            currentCountry = allCountries.random()
+                            displayCountry(view)
+                        }
                     }
+                    is CountriesUiState.Error -> {
+                        countryName.text = "Unable to load country data"
+                    }
+                    else -> {}
                 }
             }
         }

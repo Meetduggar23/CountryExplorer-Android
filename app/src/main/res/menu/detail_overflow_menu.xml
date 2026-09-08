@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_copy_name"
+        android:title="Copy Country Name" />
+    <item
+        android:id="@+id/action_copy_code"
+        android:title="Copy Country Code" />
+    <item
+        android:id="@+id/action_copy_all"
+        android:title="Copy All Info" />
+</menu>

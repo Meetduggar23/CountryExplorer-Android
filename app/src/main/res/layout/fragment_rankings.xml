@@ -70,7 +70,7 @@
             android:backgroundTint="@color/accent_yellow"
             android:text="Highest"
             android:textAllCaps="false"
-            android:textColor="@color/primary_dark_navy"
+            android:textColor="@color/badge_text_dark"
             android:textSize="12sp" />
 
         <Button

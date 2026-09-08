@@ -45,33 +45,42 @@ class CurrenciesFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.uiState.collectLatest { state ->
-                if (state is CountriesUiState.Success) {
-                    val currencyMap = mutableMapOf<String, MutableSet<String>>()
-                    state.countries.forEach { country ->
-                        country.currencies.split(", ").forEach { curr ->
-                            if (curr.isNotBlank() && curr != "Not available") {
-                                currencyMap.getOrPut(curr) { mutableSetOf() }.add(country.commonName)
+            viewLifecycleOwner.lifecycleScope.launch {
+                viewModel.uiState.collectLatest { state ->
+                    when (state) {
+                        is CountriesUiState.Success -> {
+                            val currencyMap = mutableMapOf<String, MutableSet<String>>()
+                            state.countries.forEach { country ->
+                                country.currencies.split(", ").forEach { curr ->
+                                    if (curr.isNotBlank() && curr != "Not available") {
+                                        currencyMap.getOrPut(curr) { mutableSetOf() }.add(country.commonName)
+                                    }
+                                }
+                            }
+                            currencyData.clear()
+                            currencyMap.entries.sortedBy { it.key }.forEach { (curr, countries) ->
+                                currencyData.add(Triple(curr, "", countries.size))
+                            }
+                            adapter.notifyDataSetChanged()
+
+                            if (currencyData.isEmpty()) {
+                                emptyState.visibility = View.VISIBLE
+                                recyclerView.visibility = View.GONE
+                            } else {
+                                emptyState.visibility = View.GONE
+                                recyclerView.visibility = View.VISIBLE
                             }
                         }
-                    }
-                    currencyData.clear()
-                    currencyMap.entries.sortedBy { it.key }.forEach { (curr, countries) ->
-                        currencyData.add(Triple(curr, "", countries.size))
-                    }
-                    adapter.notifyDataSetChanged()
-
-                    if (currencyData.isEmpty()) {
-                        emptyState.visibility = View.VISIBLE
-                        recyclerView.visibility = View.GONE
-                    } else {
-                        emptyState.visibility = View.GONE
-                        recyclerView.visibility = View.VISIBLE
+                        is CountriesUiState.Error -> {
+                            currencyData.clear()
+                            adapter.notifyDataSetChanged()
+                            emptyState.visibility = View.VISIBLE
+                            recyclerView.visibility = View.GONE
+                        }
+                        else -> {}
                     }
                 }
             }
-        }
     }
 
     inner class CurrencyAdapter(

@@ -1,456 +1,483 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/primary_dark_navy"
-    android:fillViewport="true"
     tools:context=".fragments.HomeFragment">
 
-    <LinearLayout
+    <!-- Scrollable content -->
+    <ScrollView
+        android:id="@+id/homeScrollView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="12dp">
-
-        <!-- Logo and Title -->
-        <ImageView
-            android:id="@+id/appLogo"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="12dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_app_icon"
-            tools:ignore="ContentDescription" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="Country Explorer"
-            android:textColor="@color/text_white"
-            android:textSize="24sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="20dp"
-            android:text="Explore countries around the world"
-            android:textColor="@color/text_light_gray"
-            android:textSize="13sp" />
-
-        <!-- Stats Row -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
-            android:orientation="horizontal">
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="6dp"
-                android:layout_weight="1"
-                app:cardBackgroundColor="@color/card_dark_navy"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="0dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:paddingVertical="14dp">
-
-                    <TextView
-                        android:id="@+id/statsCountriesCount"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/accent_yellow"
-                        android:textSize="22sp"
-                        android:textStyle="bold"
-                        tools:text="250" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
-                        android:text="Countries"
-                        android:textColor="@color/text_light_gray"
-                        android:textSize="11sp" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="3dp"
-                android:layout_weight="1"
-                app:cardBackgroundColor="@color/card_dark_navy"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="0dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:paddingVertical="14dp">
-
-                    <TextView
-                        android:id="@+id/statsRegionsCount"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/accent_yellow"
-                        android:textSize="22sp"
-                        android:textStyle="bold"
-                        tools:text="24" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
-                        android:text="Regions"
-                        android:textColor="@color/text_light_gray"
-                        android:textSize="11sp" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="6dp"
-                android:layout_weight="1"
-                app:cardBackgroundColor="@color/card_dark_navy"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="0dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:paddingVertical="14dp">
-
-                    <TextView
-                        android:id="@+id/statsLanguagesCount"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/accent_yellow"
-                        android:textSize="22sp"
-                        android:textStyle="bold"
-                        tools:text="120" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
-                        android:text="Languages"
-                        android:textColor="@color/text_light_gray"
-                        android:textSize="11sp" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-        </LinearLayout>
-
-        <!-- Quick Actions Section -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            android:text="Quick Actions"
-            android:textColor="@color/accent_yellow"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:clipToPadding="false"
+        android:overScrollMode="never"
+        android:layout_marginBottom="56dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            android:orientation="horizontal">
+            android:orientation="vertical"
+            android:paddingHorizontal="16dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp">
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/btnAllCountries"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="6dp"
-                android:layout_weight="1"
-                app:cardBackgroundColor="@color/card_dark_navy"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="0dp">
+            <!-- Loading Indicator -->
+            <ProgressBar
+                android:id="@+id/loadingIndicator"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="12dp"
+                android:indeterminateTint="@color/accent_red"
+                android:visibility="gone" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="16dp">
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_language"
-                        android:tint="@color/accent_red"
-                        tools:ignore="ContentDescription" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:text="All Countries"
-                        android:textColor="@color/text_white"
-                        android:textSize="13sp" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/btnFavorites"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="6dp"
-                android:layout_weight="1"
-                app:cardBackgroundColor="@color/card_dark_navy"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="0dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="16dp">
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_star_filled"
-                        android:tint="@color/accent_yellow"
-                        tools:ignore="ContentDescription" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:text="Favorites"
-                        android:textColor="@color/text_white"
-                        android:textSize="13sp" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-        </LinearLayout>
-
-        <!-- Row 2: Compare, Random -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            android:orientation="horizontal">
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/btnCompare"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="6dp"
-                android:layout_weight="1"
-                app:cardBackgroundColor="@color/card_dark_navy"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="0dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="16dp">
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_globe"
-                        android:tint="@color/accent_red"
-                        tools:ignore="ContentDescription" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:text="Compare"
-                        android:textColor="@color/text_white"
-                        android:textSize="13sp" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/btnRandom"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="6dp"
-                android:layout_weight="1"
-                app:cardBackgroundColor="@color/card_dark_navy"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="0dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="16dp">
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_refresh"
-                        android:tint="@color/accent_red"
-                        tools:ignore="ContentDescription" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:text="Random"
-                        android:textColor="@color/text_white"
-                        android:textSize="13sp" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-        </LinearLayout>
-
-        <!-- Row 3: Quiz (full width) -->
-        <androidx.cardview.widget.CardView
-            android:id="@+id/btnQuiz"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
-            app:cardBackgroundColor="@color/card_dark_navy"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="0dp">
-
+            <!-- Error Container -->
             <LinearLayout
+                android:id="@+id/errorContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:padding="16dp">
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="24dp"
+                android:visibility="gone">
 
                 <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_globe"
-                    android:tint="@color/accent_yellow"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:alpha="0.5"
+                    android:src="@drawable/ic_error"
+                    android:tint="@color/accent_red"
                     tools:ignore="ContentDescription" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:text="Country Quiz"
+                    android:layout_marginTop="12dp"
+                    android:gravity="center"
+                    android:text="Unable to Load Data"
                     android:textColor="@color/text_white"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:gravity="center"
+                    android:maxWidth="300dp"
+                    android:text="Please check your connection and try again."
+                    android:textColor="@color/text_light_gray"
                     android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/retryHomeButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/bg_retry_button"
+                    android:paddingHorizontal="32dp"
+                    android:paddingVertical="10dp"
+                    android:text="Retry"
+                    android:textColor="@color/text_white"
+                    android:textSize="14sp" />
             </LinearLayout>
-        </androidx.cardview.widget.CardView>
 
-        <!-- Continent Counts -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:text="Continents"
-            android:textColor="@color/accent_yellow"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-
-        <LinearLayout
-            android:id="@+id/continentCountContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
-            android:background="@drawable/bg_card"
-            android:orientation="vertical"
-            android:padding="14dp" />
-
-        <!-- Favorites & Pinned Count Row -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:orientation="horizontal">
-
+            <!-- Welcome Header -->
             <TextView
-                android:id="@+id/favoritesCountText"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textColor="@color/text_muted"
-                android:textSize="12sp"
-                tools:text="5 favorite(s)" />
-
-            <TextView
-                android:id="@+id/pinnedCountText"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="end"
-                android:textColor="@color/text_muted"
-                android:textSize="12sp"
-                tools:text="2 pinned" />
-        </LinearLayout>
-
-        <!-- Recently Viewed Section -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            android:text="Recently Viewed"
-            android:textColor="@color/accent_yellow"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-
-        <LinearLayout
-            android:id="@+id/emptyRecent"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:paddingVertical="24dp">
-
-            <ImageView
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:alpha="0.4"
-                android:src="@drawable/ic_globe"
-                android:tint="@color/text_muted"
-                tools:ignore="ContentDescription" />
+                android:text="Explore the World"
+                android:textColor="@color/text_white"
+                android:textSize="22sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="No recently viewed countries"
-                android:textColor="@color/text_muted"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="20dp"
+                android:text="Discover countries, cultures and places."
+                android:textColor="@color/text_light_gray"
                 android:textSize="13sp" />
+
+            <!-- Statistics Cards -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:orientation="horizontal">
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="6dp"
+                    android:layout_weight="1"
+                    app:cardBackgroundColor="@color/card_dark_navy"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="0dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:paddingVertical="14dp">
+
+                        <TextView
+                            android:id="@+id/statsCountriesCount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/accent_yellow"
+                            android:textSize="24sp"
+                            android:textStyle="bold"
+                            tools:text="250" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="Countries"
+                            android:textColor="@color/text_light_gray"
+                            android:textSize="11sp" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="3dp"
+                    android:layout_weight="1"
+                    app:cardBackgroundColor="@color/card_dark_navy"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="0dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:paddingVertical="14dp">
+
+                        <TextView
+                            android:id="@+id/statsRegionsCount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/accent_yellow"
+                            android:textSize="24sp"
+                            android:textStyle="bold"
+                            tools:text="24" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="Regions"
+                            android:textColor="@color/text_light_gray"
+                            android:textSize="11sp" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:layout_weight="1"
+                    app:cardBackgroundColor="@color/card_dark_navy"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="0dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:paddingVertical="14dp">
+
+                        <TextView
+                            android:id="@+id/statsLanguagesCount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/accent_yellow"
+                            android:textSize="24sp"
+                            android:textStyle="bold"
+                            tools:text="120" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="Languages"
+                            android:textColor="@color/text_light_gray"
+                            android:textSize="11sp" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+            </LinearLayout>
+
+            <!-- Continents Section -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:text="Continents"
+                android:textColor="@color/accent_yellow"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <androidx.gridlayout.widget.GridLayout
+                android:id="@+id/continentCountContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                app:columnCount="2"
+                app:useDefaultMargins="true" />
+
+            <!-- Favorites & Pinned Summary -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:orientation="horizontal">
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="4dp"
+                    android:layout_weight="1"
+                    app:cardBackgroundColor="@color/card_dark_navy"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="0dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="14dp">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_star_filled"
+                            android:tint="@color/accent_yellow"
+                            tools:ignore="ContentDescription" />
+
+                        <TextView
+                            android:id="@+id/favoritesCountText"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_weight="1"
+                            android:textColor="@color/text_light_gray"
+                            android:textSize="12sp"
+                            tools:text="5 favorite(s)" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_weight="1"
+                    app:cardBackgroundColor="@color/card_dark_navy"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="0dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="14dp">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_pin_filled"
+                            android:tint="@color/accent_red"
+                            tools:ignore="ContentDescription" />
+
+                        <TextView
+                            android:id="@+id/pinnedCountText"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_weight="1"
+                            android:textColor="@color/text_light_gray"
+                            android:textSize="12sp"
+                            tools:text="2 pinned" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+            </LinearLayout>
+
+            <!-- Recently Viewed Section -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:text="Recently Viewed"
+                android:textColor="@color/accent_yellow"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:id="@+id/emptyRecent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingVertical="24dp">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:alpha="0.4"
+                    android:src="@drawable/ic_history"
+                    android:tint="@color/text_muted"
+                    tools:ignore="ContentDescription" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="No recently viewed countries"
+                    android:textColor="@color/text_muted"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recentlyViewedList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false" />
+
+            <!-- Last Updated -->
+            <TextView
+                android:id="@+id/lastUpdatedText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="16dp"
+                android:textColor="@color/text_muted"
+                android:textSize="11sp"
+                tools:text="Last refreshed: just now" />
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Bottom Navigation Bar -->
+    <LinearLayout
+        android:id="@+id/bottomNavContainer"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_gravity="bottom"
+        android:background="@color/status_bar_color"
+        android:elevation="8dp"
+        android:orientation="horizontal"
+        android:paddingHorizontal="0dp">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_gravity="top"
+            android:background="@color/divider" />
+
+        <!-- All Countries -->
+        <LinearLayout
+            android:id="@+id/navAllCountries"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/navIconAllCountries"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_language"
+                android:tint="@color/text_muted"
+                tools:ignore="ContentDescription" />
         </LinearLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recentlyViewedList"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:nestedScrollingEnabled="false" />
+        <!-- Favorites -->
+        <LinearLayout
+            android:id="@+id/navFavorites"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:gravity="center"
+            android:orientation="vertical">
 
-        <!-- Last Updated -->
-        <TextView
-            android:id="@+id/lastUpdatedText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="16dp"
-            android:textColor="@color/text_muted"
-            android:textSize="11sp"
-            tools:text="Last refreshed: just now" />
+            <ImageView
+                android:id="@+id/navIconFavorites"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_star"
+                android:tint="@color/text_muted"
+                tools:ignore="ContentDescription" />
+        </LinearLayout>
 
+        <!-- Compare -->
+        <LinearLayout
+            android:id="@+id/navCompare"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/navIconCompare"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_compare"
+                android:tint="@color/text_muted"
+                tools:ignore="ContentDescription" />
+        </LinearLayout>
+
+        <!-- Random -->
+        <LinearLayout
+            android:id="@+id/navRandom"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/navIconRandom"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_random"
+                android:tint="@color/text_muted"
+                tools:ignore="ContentDescription" />
+        </LinearLayout>
+
+        <!-- Quiz -->
+        <LinearLayout
+            android:id="@+id/navQuiz"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/navIconQuiz"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_quiz"
+                android:tint="@color/text_muted"
+                tools:ignore="ContentDescription" />
+        </LinearLayout>
     </LinearLayout>
-</ScrollView>
+</FrameLayout>

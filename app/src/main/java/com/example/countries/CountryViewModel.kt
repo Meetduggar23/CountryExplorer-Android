@@ -12,7 +12,8 @@ import kotlin.random.Random
 sealed class CountriesUiState {
     object Loading : CountriesUiState()
     data class Success(val countries: List<Country>, val totalCount: Int = countries.size) : CountriesUiState()
-    data class Error(val message: String) : CountriesUiState()
+    data class Error(val message: String, val isAuthError: Boolean = false) : CountriesUiState()
+    object Empty : CountriesUiState()
 }
 
 class CountryViewModel(application: Application) : AndroidViewModel(application) {
@@ -39,9 +40,20 @@ class CountryViewModel(application: Application) : AndroidViewModel(application)
                 val countries = repository.getCountries()
                 _allCountries.clear()
                 _allCountries.addAll(countries)
-                _uiState.value = CountriesUiState.Success(countries, countries.size)
+                if (countries.isEmpty()) {
+                    _uiState.value = CountriesUiState.Empty
+                } else {
+                    _uiState.value = CountriesUiState.Success(countries, countries.size)
+                }
+            } catch (e: ApiException) {
+                _uiState.value = CountriesUiState.Error(
+                    message = e.message ?: "An error occurred",
+                    isAuthError = e.statusCode == 401 || e.statusCode == 403
+                )
             } catch (e: Exception) {
-                _uiState.value = CountriesUiState.Error(e.message ?: "Unknown error occurred")
+                _uiState.value = CountriesUiState.Error(
+                    message = e.message ?: "An unexpected error occurred"
+                )
             }
         }
     }

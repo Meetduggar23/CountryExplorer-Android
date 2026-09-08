@@ -45,36 +45,45 @@ class LanguagesFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.uiState.collectLatest { state ->
-                if (state is CountriesUiState.Success) {
-                    val languageMap = mutableMapOf<String, MutableSet<String>>()
-                    state.countries.forEach { country ->
-                        country.languages.split(", ").forEach { lang ->
-                            if (lang.isNotBlank() && lang != "Not available") {
-                                languageMap.getOrPut(lang) { mutableSetOf() }.add(country.commonName)
+            viewLifecycleOwner.lifecycleScope.launch {
+                viewModel.uiState.collectLatest { state ->
+                    when (state) {
+                        is CountriesUiState.Success -> {
+                            val languageMap = mutableMapOf<String, MutableSet<String>>()
+                            state.countries.forEach { country ->
+                                country.languages.split(", ").forEach { lang ->
+                                    if (lang.isNotBlank() && lang != "Not available") {
+                                        languageMap.getOrPut(lang) { mutableSetOf() }.add(country.commonName)
+                                    }
+                                }
+                            }
+                            languageData.clear()
+                            languageMap.entries.sortedBy { it.key }.forEach { (lang, countries) ->
+                                val firstCode = state.countries.firstOrNull {
+                                    it.languages.lowercase().contains(lang.lowercase())
+                                }?.languages?.split(", ")?.firstOrNull { it.equals(lang, ignoreCase = true) } ?: ""
+                                languageData.add(Triple(lang, firstCode, countries.size))
+                            }
+                            adapter.notifyDataSetChanged()
+
+                            if (languageData.isEmpty()) {
+                                emptyState.visibility = View.VISIBLE
+                                recyclerView.visibility = View.GONE
+                            } else {
+                                emptyState.visibility = View.GONE
+                                recyclerView.visibility = View.VISIBLE
                             }
                         }
-                    }
-                    languageData.clear()
-                    languageMap.entries.sortedBy { it.key }.forEach { (lang, countries) ->
-                        val firstCode = state.countries.firstOrNull {
-                            it.languages.lowercase().contains(lang.lowercase())
-                        }?.languages?.split(", ")?.firstOrNull { it.equals(lang, ignoreCase = true) } ?: ""
-                        languageData.add(Triple(lang, firstCode, countries.size))
-                    }
-                    adapter.notifyDataSetChanged()
-
-                    if (languageData.isEmpty()) {
-                        emptyState.visibility = View.VISIBLE
-                        recyclerView.visibility = View.GONE
-                    } else {
-                        emptyState.visibility = View.GONE
-                        recyclerView.visibility = View.VISIBLE
+                        is CountriesUiState.Error -> {
+                            languageData.clear()
+                            adapter.notifyDataSetChanged()
+                            emptyState.visibility = View.VISIBLE
+                            recyclerView.visibility = View.GONE
+                        }
+                        else -> {}
                     }
                 }
             }
-        }
     }
 
     inner class LanguageAdapter(

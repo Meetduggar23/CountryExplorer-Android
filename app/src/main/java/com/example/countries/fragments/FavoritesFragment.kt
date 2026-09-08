@@ -109,8 +109,16 @@ class FavoritesFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.uiState.collectLatest { state ->
-                if (state is CountriesUiState.Success) {
-                    loadFavorites(searchEditText.text.toString())
+                when (state) {
+                    is CountriesUiState.Success -> {
+                        loadFavorites(searchEditText.text.toString())
+                    }
+                    is CountriesUiState.Error -> {
+                        emptyState.visibility = View.VISIBLE
+                        recyclerView.visibility = View.GONE
+                        emptyStateText.text = "Unable to load countries. Pull to refresh."
+                    }
+                    else -> {}
                 }
             }
         }

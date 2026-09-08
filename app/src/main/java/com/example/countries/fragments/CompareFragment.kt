@@ -67,9 +67,23 @@ class CompareFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.uiState.collectLatest { state ->
-                if (state is CountriesUiState.Success) {
-                    allCountries = state.countries.sortedBy { it.commonName }
-                    setupSpinners()
+                when (state) {
+                    is CountriesUiState.Success -> {
+                        allCountries = state.countries.sortedBy { it.commonName }
+                        setupSpinners()
+                    }
+                    is CountriesUiState.Error -> {
+                        compareContainer.removeAllViews()
+                        val tv = TextView(requireContext()).apply {
+                            text = "Unable to load country data"
+                            textSize = 14f
+                            setTextColor(resources.getColor(R.color.text_muted, null))
+                            gravity = android.view.Gravity.CENTER
+                            setPadding(0, 32, 0, 0)
+                        }
+                        compareContainer.addView(tv)
+                    }
+                    else -> {}
                 }
             }
         }
@@ -95,35 +109,42 @@ class CompareFragment : Fragment() {
         val country2 = allCountries[spinner2.selectedItemPosition]
 
         fun addRow(label: String, val1: String, val2: String) {
+            val dp4 = (4 * resources.displayMetrics.density).toInt()
+            val dp8 = (8 * resources.displayMetrics.density).toInt()
             val row = LinearLayout(requireContext()).apply {
                 orientation = LinearLayout.HORIZONTAL
-                setPadding(0, 8, 0, 8)
+                setPadding(0, dp4, 0, dp4)
                 dividerDrawable = null
             }
             val tv1 = TextView(requireContext()).apply {
                 text = val1
-                textSize = 14f
+                textSize = 13f
                 setTextColor(resources.getColor(R.color.text_white, null))
                 layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
                 gravity = android.view.Gravity.CENTER
+                maxLines = 2
+                ellipsize = android.text.TextUtils.TruncateAt.END
             }
             val tvLabel = TextView(requireContext()).apply {
                 text = label
-                textSize = 12f
+                textSize = 11f
                 setTextColor(resources.getColor(R.color.accent_yellow, null))
                 gravity = android.view.Gravity.CENTER
-                setPadding(8, 0, 8, 0)
+                setPadding(dp8, 0, dp8, 0)
                 layoutParams = LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT
                 )
+                maxLines = 1
             }
             val tv2 = TextView(requireContext()).apply {
                 text = val2
-                textSize = 14f
+                textSize = 13f
                 setTextColor(resources.getColor(R.color.text_white, null))
                 layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
                 gravity = android.view.Gravity.CENTER
+                maxLines = 2
+                ellipsize = android.text.TextUtils.TruncateAt.END
             }
             row.addView(tv1)
             row.addView(tvLabel)

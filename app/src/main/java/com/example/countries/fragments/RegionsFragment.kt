@@ -45,21 +45,28 @@ class RegionsFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.uiState.collectLatest { state ->
-                if (state is CountriesUiState.Success) {
-                    val regions = listOf("Africa", "Americas", "Asia", "Europe", "Oceania")
-                    regionData.clear()
-                    regions.forEach { region ->
-                        val count = state.countries.count {
-                            it.region.equals(region, ignoreCase = true)
+            viewLifecycleOwner.lifecycleScope.launch {
+                viewModel.uiState.collectLatest { state ->
+                    when (state) {
+                        is CountriesUiState.Success -> {
+                            val regions = listOf("Africa", "Americas", "Asia", "Europe", "Oceania")
+                            regionData.clear()
+                            regions.forEach { region ->
+                                val count = state.countries.count {
+                                    it.region.equals(region, ignoreCase = true)
+                                }
+                                regionData.add(Pair(region, count))
+                            }
+                            adapter.notifyDataSetChanged()
                         }
-                        regionData.add(Pair(region, count))
+                        is CountriesUiState.Error -> {
+                            regionData.clear()
+                            adapter.notifyDataSetChanged()
+                        }
+                        else -> {}
                     }
-                    adapter.notifyDataSetChanged()
                 }
             }
-        }
     }
 
     inner class RegionAdapter(

@@ -2,20 +2,21 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="primary_dark_navy">#FF0B1426</color>
-    <color name="secondary_dark_navy">#FF12203D</color>
-    <color name="card_dark_navy">#FF1A2D50</color>
-    <color name="card_dark_navy_pressed">#FF243A63</color>
-    <color name="accent_red">#FFE63946</color>
-    <color name="accent_yellow">#FFFFD166</color>
-    <color name="text_white">#FFFAFAFA</color>
-    <color name="text_light_gray">#FFB0BEC5</color>
-    <color name="text_muted">#FF607D8B</color>
-    <color name="divider">#FF1E3150</color>
-    <color name="search_background">#FF162544</color>
-    <color name="status_bar_color">#FF060D1F</color>
-    <color name="drawer_header_bg">#FF0D1B33</color>
-    <color name="selected_item_bg">#22E63946</color>
-    <color name="nav_item_text">#FFB0BEC5</color>
-    <color name="nav_section_text">#FF607D8B</color>
+    <color name="primary_dark_navy">#FFF8F9FB</color>
+    <color name="secondary_dark_navy">#FFEEF0F4</color>
+    <color name="card_dark_navy">#FFFFFFFF</color>
+    <color name="card_dark_navy_pressed">#FFE8EBF0</color>
+    <color name="accent_red">#FF1A9E96</color>
+    <color name="accent_yellow">#FFC9A84C</color>
+    <color name="text_white">#FF1B2A4A</color>
+    <color name="text_light_gray">#FF6B7A90</color>
+    <color name="text_muted">#FF9AA5B4</color>
+    <color name="divider">#FFD8DCE3</color>
+    <color name="search_background">#FFE8EBF0</color>
+    <color name="status_bar_color">#FFE8EBF0</color>
+    <color name="drawer_header_bg">#FFF8F9FB</color>
+    <color name="selected_item_bg">#1A1A9E96</color>
+    <color name="nav_item_text">#FF6B7A90</color>
+    <color name="nav_section_text">#FF9AA5B4</color>
+    <color name="badge_text_dark">#FFFFFFFF</color>
 </resources>

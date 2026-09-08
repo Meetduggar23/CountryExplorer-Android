@@ -45,23 +45,30 @@ class ContinentsFragment : Fragment() {
         recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
         recyclerView.adapter = adapter
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.uiState.collectLatest { state ->
-                if (state is CountriesUiState.Success) {
-                    val allContinents = listOf("Africa", "Asia", "Europe", "North America", "South America", "Oceania", "Antarctica")
-                    continentData.clear()
-                    allContinents.forEach { continent ->
-                        val count = state.countries.count { country ->
-                            country.continents.any { it.equals(continent, ignoreCase = true) }
+            viewLifecycleOwner.lifecycleScope.launch {
+                viewModel.uiState.collectLatest { state ->
+                    when (state) {
+                        is CountriesUiState.Success -> {
+                            val allContinents = listOf("Africa", "Asia", "Europe", "North America", "South America", "Oceania", "Antarctica")
+                            continentData.clear()
+                            allContinents.forEach { continent ->
+                                val count = state.countries.count { country ->
+                                    country.continents.any { it.equals(continent, ignoreCase = true) }
+                                }
+                                if (count > 0) {
+                                    continentData.add(Pair(continent, count))
+                                }
+                            }
+                            adapter.notifyDataSetChanged()
                         }
-                        if (count > 0) {
-                            continentData.add(Pair(continent, count))
+                        is CountriesUiState.Error -> {
+                            continentData.clear()
+                            adapter.notifyDataSetChanged()
                         }
+                        else -> {}
                     }
-                    adapter.notifyDataSetChanged()
                 }
             }
-        }
     }
 
     inner class ContinentAdapter(

@@ -12,8 +12,8 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:paddingHorizontal="24dp"
-        android:paddingTop="40dp"
+        android:paddingHorizontal="20dp"
+        android:paddingTop="32dp"
         android:paddingBottom="32dp">
 
         <!-- App Icon -->

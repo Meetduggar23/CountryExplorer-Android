@@ -108,18 +108,25 @@ class RecentlyViewedFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.uiState.collectLatest { state ->
-                if (state is CountriesUiState.Success) {
-                    val recent = recentlyViewedManager.getRecentlyViewed(state.countries)
-                    if (recent.isEmpty()) {
+                when (state) {
+                    is CountriesUiState.Success -> {
+                        val recent = recentlyViewedManager.getRecentlyViewed(state.countries)
+                        if (recent.isEmpty()) {
+                            emptyState.visibility = View.VISIBLE
+                            recyclerView.visibility = View.GONE
+                            clearButton.visibility = View.GONE
+                        } else {
+                            emptyState.visibility = View.GONE
+                            recyclerView.visibility = View.VISIBLE
+                            clearButton.visibility = View.VISIBLE
+                            adapter.updateData(recent)
+                        }
+                    }
+                    is CountriesUiState.Error -> {
                         emptyState.visibility = View.VISIBLE
                         recyclerView.visibility = View.GONE
-                        clearButton.visibility = View.GONE
-                    } else {
-                        emptyState.visibility = View.GONE
-                        recyclerView.visibility = View.VISIBLE
-                        clearButton.visibility = View.VISIBLE
-                        adapter.updateData(recent)
                     }
+                    else -> {}
                 }
             }
         }

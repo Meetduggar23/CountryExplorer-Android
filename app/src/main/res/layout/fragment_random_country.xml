@@ -1,108 +1,118 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/primary_dark_navy"
-    android:gravity="center_horizontal"
-    android:orientation="vertical"
-    android:paddingHorizontal="24dp"
-    android:paddingTop="32dp"
+    android:fillViewport="true"
     tools:context=".RandomCountryFragment">
 
-    <!-- Flag -->
-    <ImageView
-        android:id="@+id/flagImageView"
-        android:layout_width="150dp"
-        android:layout_height="100dp"
-        android:layout_marginBottom="20dp"
-        android:adjustViewBounds="true"
-        android:scaleType="centerCrop"
-        tools:ignore="ContentDescription"
-        tools:srcCompat="@tools:sample/flags" />
-
-    <!-- Country Name -->
-    <TextView
-        android:id="@+id/countryNameText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textColor="@color/text_white"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        tools:text="United States" />
-
-    <!-- Capital -->
-    <TextView
-        android:id="@+id/capitalText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:textColor="@color/text_light_gray"
-        android:textSize="15sp"
-        tools:text="Washington, D.C." />
-
-    <!-- Region Badge -->
-    <TextView
-        android:id="@+id/regionBadge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:background="@drawable/bg_badge"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="4dp"
-        android:textColor="@color/accent_yellow"
-        android:textSize="12sp"
-        tools:text="Americas" />
-
-    <!-- Population -->
-    <TextView
-        android:id="@+id/populationText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:textColor="@color/text_light_gray"
-        android:textSize="15sp"
-        tools:text="Population: 331,000,000" />
-
-    <!-- Action Buttons -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:orientation="vertical">
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingHorizontal="20dp"
+        android:paddingTop="24dp"
+        android:paddingBottom="24dp">
 
-        <Button
-            android:id="@+id/btnRandom"
+        <!-- Flag -->
+        <ImageView
+            android:id="@+id/flagImageView"
             android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:backgroundTint="@color/accent_red"
-            android:text="Explore Random Country"
-            android:textAllCaps="false"
+            android:layout_height="120dp"
+            android:layout_marginBottom="16dp"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            tools:ignore="ContentDescription"
+            tools:srcCompat="@tools:sample/flags" />
+
+        <!-- Country Name -->
+        <TextView
+            android:id="@+id/countryNameText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:maxLines="2"
             android:textColor="@color/text_white"
-            android:textSize="15sp" />
+            android:textSize="22sp"
+            android:textStyle="bold"
+            tools:text="The Democratic Republic of the Congo" />
 
-        <Button
-            android:id="@+id/btnDetails"
+        <!-- Capital -->
+        <TextView
+            android:id="@+id/capitalText"
             android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/bg_button_outlined"
-            android:text="View Details"
-            android:textAllCaps="false"
-            android:textColor="@color/text_white"
-            android:textSize="15sp" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:gravity="center"
+            android:textColor="@color/text_light_gray"
+            android:textSize="14sp"
+            tools:text="Washington, D.C." />
 
-        <Button
-            android:id="@+id/btnFavAdd"
-            android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/bg_button_outlined_yellow"
-            android:text="Add to Favorites"
-            android:textAllCaps="false"
+        <!-- Region Badge -->
+        <TextView
+            android:id="@+id/regionBadge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/bg_badge"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="4dp"
             android:textColor="@color/accent_yellow"
-            android:textSize="15sp" />
-    </LinearLayout>
+            android:textSize="12sp"
+            tools:text="Americas" />
 
-</LinearLayout>
+        <!-- Population -->
+        <TextView
+            android:id="@+id/populationText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:gravity="center"
+            android:textColor="@color/text_light_gray"
+            android:textSize="14sp"
+            tools:text="Population: 331,000,000" />
+
+        <!-- Action Buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/btnRandom"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:backgroundTint="@color/accent_red"
+                android:text="Explore Random Country"
+                android:textAllCaps="false"
+                android:textColor="@color/text_white"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/btnDetails"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_button_outlined"
+                android:text="View Details"
+                android:textAllCaps="false"
+                android:textColor="@color/text_white"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/btnFavAdd"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_button_outlined_yellow"
+                android:text="Add to Favorites"
+                android:textAllCaps="false"
+                android:textColor="@color/accent_yellow"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

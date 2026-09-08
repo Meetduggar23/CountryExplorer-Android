@@ -42,6 +42,7 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.androidx.recyclerview)
     implementation(libs.androidx.cardview)
+    implementation("androidx.gridlayout:gridlayout:1.0.0")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.junit)

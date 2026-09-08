@@ -89,12 +89,19 @@ class QuizFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.uiState.collectLatest { state ->
-                if (state is CountriesUiState.Success) {
-                    allCountries = state.countries
-                    if (questions.isEmpty()) {
-                        generateQuestions()
-                        displayQuestion()
+                when (state) {
+                    is CountriesUiState.Success -> {
+                        allCountries = state.countries
+                        if (questions.isEmpty()) {
+                            generateQuestions()
+                            displayQuestion()
+                        }
                     }
+                    is CountriesUiState.Error -> {
+                        quizQuestion.text = "Unable to load country data. Please go back and retry."
+                        setOptionsEnabled(false)
+                    }
+                    else -> {}
                 }
             }
         }

@@ -176,7 +176,7 @@
             android:backgroundTint="@color/accent_yellow"
             android:text="Restart Quiz"
             android:textAllCaps="false"
-            android:textColor="@color/primary_dark_navy"
+            android:textColor="@color/badge_text_dark"
             android:textSize="14sp"
             android:visibility="gone" />
     </LinearLayout>

@@ -7,12 +7,16 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Build
 import android.os.Bundle
+import android.view.MenuInflater
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.PopupMenu
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.snackbar.Snackbar
@@ -43,10 +47,8 @@ class CountryDetailActivity : AppCompatActivity() {
     private lateinit var bordersValue: TextView
     private lateinit var favButton: ImageView
     private lateinit var shareButton: ImageView
-    private lateinit var copyButton: ImageView
     private lateinit var pinButton: ImageView
-    private lateinit var copyNameBtn: ImageView
-    private lateinit var copyCodeBtn: ImageView
+    private lateinit var overflowMenuBtn: ImageView
     private lateinit var summaryPopulation: TextView
     private lateinit var summaryArea: TextView
     private lateinit var summaryRegion: TextView
@@ -55,6 +57,7 @@ class CountryDetailActivity : AppCompatActivity() {
     private lateinit var summaryContainer: LinearLayout
     private lateinit var neighborsContainer: LinearLayout
     private lateinit var neighborsList: LinearLayout
+    private lateinit var scrollView: android.widget.ScrollView
 
     private lateinit var favoriteManager: FavoriteManager
     private lateinit var pinManager: PinManager
@@ -63,6 +66,7 @@ class CountryDetailActivity : AppCompatActivity() {
     private var currentCountry: Country? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        ThemeHelper.applyTheme(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_country_detail)
 
@@ -73,6 +77,7 @@ class CountryDetailActivity : AppCompatActivity() {
 
         initViews()
         setupButtons()
+        applyWindowInsets()
 
         val country = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             intent.getSerializableExtra("country", Country::class.java)
@@ -88,6 +93,14 @@ class CountryDetailActivity : AppCompatActivity() {
             loadNeighbors(country)
         } else {
             finish()
+        }
+    }
+
+    private fun applyWindowInsets() {
+        ViewCompat.setOnApplyWindowInsetsListener(scrollView) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(v.paddingLeft, v.paddingTop, v.paddingRight, systemBars.bottom + 24)
+            insets
         }
     }
 
@@ -111,10 +124,8 @@ class CountryDetailActivity : AppCompatActivity() {
         bordersValue = findViewById(R.id.bordersValue)
         favButton = findViewById(R.id.favButton)
         shareButton = findViewById(R.id.shareButton)
-        copyButton = findViewById(R.id.copyButton)
         pinButton = findViewById(R.id.pinButton)
-        copyNameBtn = findViewById(R.id.copyNameBtn)
-        copyCodeBtn = findViewById(R.id.copyCodeBtn)
+        overflowMenuBtn = findViewById(R.id.overflowMenuBtn)
         summaryPopulation = findViewById(R.id.summaryPopulation)
         summaryArea = findViewById(R.id.summaryArea)
         summaryRegion = findViewById(R.id.summaryRegion)
@@ -123,6 +134,7 @@ class CountryDetailActivity : AppCompatActivity() {
         summaryContainer = findViewById(R.id.summaryContainer)
         neighborsContainer = findViewById(R.id.neighborsContainer)
         neighborsList = findViewById(R.id.neighborsList)
+        scrollView = findViewById(R.id.scrollView)
     }
 
     private fun setupButtons() {
@@ -141,22 +153,8 @@ class CountryDetailActivity : AppCompatActivity() {
             }
         }
 
-        copyNameBtn.setOnClickListener {
-            currentCountry?.let { country ->
-                val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                val clip = ClipData.newPlainText("Country Name", country.commonName)
-                clipboard.setPrimaryClip(clip)
-                Snackbar.make(copyNameBtn, "Country name copied", Snackbar.LENGTH_SHORT).show()
-            }
-        }
-
-        copyCodeBtn.setOnClickListener {
-            currentCountry?.let { country ->
-                val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                val clip = ClipData.newPlainText("Country Code", country.cca2)
-                clipboard.setPrimaryClip(clip)
-                Snackbar.make(copyCodeBtn, "Country code copied", Snackbar.LENGTH_SHORT).show()
-            }
+        overflowMenuBtn.setOnClickListener { view ->
+            showOverflowMenu(view)
         }
 
         pinButton.setOnClickListener {
@@ -205,26 +203,55 @@ class CountryDetailActivity : AppCompatActivity() {
                 startActivity(Intent.createChooser(intent, "Share Country"))
             }
         }
+    }
 
-        copyButton.setOnClickListener {
-            currentCountry?.let { country ->
-                val copyText = buildString {
-                    appendLine("Country: ${country.commonName}")
-                    appendLine("Official: ${country.officialName}")
-                    appendLine("Capital: ${country.capital}")
-                    appendLine("Population: ${formatPopulation(country.population)}")
-                    appendLine("Area: ${formatArea(country.area)}")
-                    appendLine("Region: ${country.region}")
-                    appendLine("Subregion: ${country.subregion}")
-                    appendLine("Languages: ${country.languages}")
-                    appendLine("Currency: ${country.currencies}")
+    private fun showOverflowMenu(anchor: View) {
+        val popup = PopupMenu(this, anchor)
+        val inflater: MenuInflater = popup.menuInflater
+        inflater.inflate(R.menu.detail_overflow_menu, popup.menu)
+        popup.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                R.id.action_copy_name -> {
+                    copyToClipboard("Country Name", currentCountry?.commonName ?: "")
+                    true
                 }
-                val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                val clip = ClipData.newPlainText("Country Info", copyText)
-                clipboard.setPrimaryClip(clip)
-                Snackbar.make(copyButton, "Country information copied", Snackbar.LENGTH_SHORT).show()
+                R.id.action_copy_code -> {
+                    copyToClipboard("Country Code", currentCountry?.cca2 ?: "")
+                    true
+                }
+                R.id.action_copy_all -> {
+                    currentCountry?.let { country ->
+                        val copyText = buildString {
+                            appendLine("Country: ${country.commonName}")
+                            appendLine("Official: ${country.officialName}")
+                            appendLine("Capital: ${country.capital}")
+                            appendLine("Population: ${formatPopulation(country.population)}")
+                            appendLine("Area: ${formatArea(country.area)}")
+                            appendLine("Region: ${country.region}")
+                            appendLine("Subregion: ${country.subregion}")
+                            appendLine("Languages: ${country.languages}")
+                            appendLine("Currency: ${country.currencies}")
+                        }
+                        copyToClipboard("Country Info", copyText)
+                    }
+                    true
+                }
+                else -> false
             }
         }
+        popup.show()
+    }
+
+    private fun copyToClipboard(label: String, text: String) {
+        val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clip = ClipData.newPlainText(label, text)
+        clipboard.setPrimaryClip(clip)
+        val message = when (label) {
+            "Country Name" -> "Country name copied"
+            "Country Code" -> "Country code copied"
+            else -> "Country information copied"
+        }
+        Snackbar.make(overflowMenuBtn, message, Snackbar.LENGTH_SHORT).show()
     }
 
     private fun displayCountry(country: Country) {

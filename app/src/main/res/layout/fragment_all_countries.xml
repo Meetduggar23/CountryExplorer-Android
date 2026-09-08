@@ -129,12 +129,13 @@
         android:layout_marginHorizontal="16dp"
         android:background="@color/divider" />
 
-    <!-- Country List -->
+    <!-- Content Area -->
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
 
+        <!-- Country List -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
@@ -142,12 +143,100 @@
             android:clipToPadding="false"
             android:paddingBottom="80dp" />
 
+        <!-- Loading State -->
+        <LinearLayout
+            android:id="@+id/loadingState"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="32dp"
+            android:visibility="gone">
+
+            <ProgressBar
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:indeterminateTint="@color/accent_red" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:gravity="center"
+                android:text="Loading Countries..."
+                android:textColor="@color/text_light_gray"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:text="This may take a moment"
+                android:textColor="@color/text_muted"
+                android:textSize="13sp" />
+        </LinearLayout>
+
+        <!-- Error State -->
+        <LinearLayout
+            android:id="@+id/errorState"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="32dp"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:alpha="0.5"
+                android:src="@drawable/ic_error"
+                android:tint="@color/accent_red"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:gravity="center"
+                android:text="Unable to Load Countries"
+                android:textColor="@color/text_white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/errorMessageText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:maxWidth="320dp"
+                android:text="We couldn't load the country data. Please check your connection and try again."
+                android:textColor="@color/text_light_gray"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/retryButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/bg_retry_button"
+                android:paddingHorizontal="32dp"
+                android:paddingVertical="12dp"
+                android:text="Retry"
+                android:textColor="@color/text_white"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <!-- Empty State -->
         <LinearLayout
             android:id="@+id/emptyState"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
             android:orientation="vertical"
+            android:padding="32dp"
             android:visibility="gone">
 
             <ImageView
@@ -164,6 +253,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:gravity="center"
+                android:maxWidth="320dp"
                 android:text="No countries found"
                 android:textColor="@color/text_muted"
                 android:textSize="16sp"
@@ -180,7 +270,7 @@
                 android:text="Reset Filters"
                 android:textColor="@color/text_white"
                 android:textSize="14sp"
-                 android:visibility="gone" />
+                android:visibility="gone" />
         </LinearLayout>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton

@@ -85,13 +85,13 @@ class RankingsFragment : Fragment() {
         fun updateSubButtons() {
             if (currentOrder == "highest") {
                 btnHighest.backgroundTintList = resources.getColorStateList(R.color.accent_yellow, null)
-                btnHighest.setTextColor(resources.getColor(R.color.primary_dark_navy, null))
+                btnHighest.setTextColor(resources.getColor(R.color.badge_text_dark, null))
                 btnLowest.setBackgroundColor(0)
                 btnLowest.setBackgroundResource(R.drawable.bg_search)
                 btnLowest.setTextColor(resources.getColor(R.color.text_light_gray, null))
             } else {
                 btnLowest.backgroundTintList = resources.getColorStateList(R.color.accent_yellow, null)
-                btnLowest.setTextColor(resources.getColor(R.color.primary_dark_navy, null))
+                btnLowest.setTextColor(resources.getColor(R.color.badge_text_dark, null))
                 btnHighest.setBackgroundColor(0)
                 btnHighest.setBackgroundResource(R.drawable.bg_search)
                 btnHighest.setTextColor(resources.getColor(R.color.text_light_gray, null))
@@ -136,9 +136,15 @@ class RankingsFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.uiState.collectLatest { state ->
-                if (state is CountriesUiState.Success) {
-                    allCountries = state.countries
-                    updateRankings()
+                when (state) {
+                    is CountriesUiState.Success -> {
+                        allCountries = state.countries
+                        updateRankings()
+                    }
+                    is CountriesUiState.Error -> {
+                        rankingTitle.text = "Unable to load country data"
+                    }
+                    else -> {}
                 }
             }
         }

@@ -31,6 +31,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     val imageCache = mutableMapOf<String, Bitmap>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        ThemeHelper.applyTheme(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
@@ -50,6 +51,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         navigationView.setNavigationItemSelectedListener(this)
 
+        val themeItem = navigationView.menu.findItem(R.id.nav_theme)
+        themeItem?.title = if (ThemeHelper.isDarkTheme(this)) "Dark Theme" else "Light Theme"
+
         viewModel = ViewModelProvider(this)[CountryViewModel::class.java]
 
         if (savedInstanceState == null) {
@@ -59,6 +63,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.nav_theme) {
+            val newMode = ThemeHelper.toggleTheme(this)
+            val title = if (newMode == ThemeHelper.MODE_DARK) "Dark Theme" else "Light Theme"
+            item.title = title
+            drawerLayout.closeDrawer(GravityCompat.START)
+            return true
+        }
+
         val fragment: Fragment? = when (item.itemId) {
             R.id.nav_home -> HomeFragment()
             R.id.nav_all_countries -> AllCountriesFragment()

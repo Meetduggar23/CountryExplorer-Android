@@ -54,6 +54,10 @@ class AllCountriesFragment : Fragment() {
     private lateinit var searchEditText: EditText
     private lateinit var clearSearchButton: ImageView
     private lateinit var countryCountText: TextView
+    private lateinit var loadingState: LinearLayout
+    private lateinit var errorState: LinearLayout
+    private lateinit var errorMessageText: TextView
+    private lateinit var retryButton: TextView
     private lateinit var emptyState: LinearLayout
     private lateinit var emptyStateText: TextView
     private lateinit var resetSortButton: TextView
@@ -126,6 +130,10 @@ class AllCountriesFragment : Fragment() {
         searchEditText = view.findViewById(R.id.searchEditText)
         clearSearchButton = view.findViewById(R.id.clearSearchButton)
         countryCountText = view.findViewById(R.id.countryCountText)
+        loadingState = view.findViewById(R.id.loadingState)
+        errorState = view.findViewById(R.id.errorState)
+        errorMessageText = view.findViewById(R.id.errorMessageText)
+        retryButton = view.findViewById(R.id.retryButton)
         emptyState = view.findViewById(R.id.emptyState)
         emptyStateText = view.findViewById(R.id.emptyStateText)
         resetSortButton = view.findViewById(R.id.resetSortButton)
@@ -136,6 +144,10 @@ class AllCountriesFragment : Fragment() {
         searchHistoryContainer = view.findViewById(R.id.searchHistoryContainer)
 
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+        retryButton.setOnClickListener {
+            viewModel.refresh()
+        }
     }
 
     private fun setupAdapter() {
@@ -373,16 +385,28 @@ class AllCountriesFragment : Fragment() {
                 when (state) {
                     is CountriesUiState.Loading -> {
                         recyclerView.visibility = View.GONE
-                        emptyState.visibility = View.VISIBLE
-                        emptyStateText.text = "Loading countries..."
+                        loadingState.visibility = View.VISIBLE
+                        errorState.visibility = View.GONE
+                        emptyState.visibility = View.GONE
                     }
                     is CountriesUiState.Success -> {
+                        loadingState.visibility = View.GONE
+                        errorState.visibility = View.GONE
                         refreshCurrentList()
                     }
                     is CountriesUiState.Error -> {
                         recyclerView.visibility = View.GONE
+                        loadingState.visibility = View.GONE
+                        errorState.visibility = View.VISIBLE
+                        emptyState.visibility = View.GONE
+                        errorMessageText.text = state.message
+                    }
+                    is CountriesUiState.Empty -> {
+                        recyclerView.visibility = View.GONE
+                        loadingState.visibility = View.GONE
+                        errorState.visibility = View.GONE
                         emptyState.visibility = View.VISIBLE
-                        emptyStateText.text = "Error: ${state.message}"
+                        emptyStateText.text = "No Countries Found"
                     }
                 }
             }

@@ -4,7 +4,7 @@
         <item name="colorPrimaryVariant">@color/accent_red</item>
         <item name="colorSecondary">@color/accent_yellow</item>
         <item name="colorOnPrimary">@color/white</item>
-        <item name="colorOnSecondary">@color/primary_dark_navy</item>
+        <item name="colorOnSecondary">@color/badge_text_dark</item>
         <item name="android:colorBackground">@color/primary_dark_navy</item>
         <item name="colorSurface">@color/secondary_dark_navy</item>
         <item name="colorOnSurface">@color/text_white</item>

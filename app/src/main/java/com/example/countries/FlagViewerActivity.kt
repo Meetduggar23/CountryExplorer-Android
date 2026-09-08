@@ -24,6 +24,7 @@ class FlagViewerActivity : AppCompatActivity() {
     private lateinit var closeBtn: View
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        ThemeHelper.applyTheme(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_flag_viewer)
 
