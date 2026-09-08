@@ -28,21 +28,24 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var navigationView: NavigationView
     private lateinit var viewModel: CountryViewModel
+    private lateinit var toolbar: Toolbar
+    private lateinit var toggle: ActionBarDrawerToggle
     val imageCache = mutableMapOf<String, Bitmap>()
+    private var currentFragmentTag: String = "home"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         ThemeHelper.applyTheme(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar?.title = "Country Explorer"
 
         drawerLayout = findViewById(R.id.drawerLayout)
         navigationView = findViewById(R.id.navigationView)
 
-        val toggle = ActionBarDrawerToggle(
+        toggle = ActionBarDrawerToggle(
             this, drawerLayout, toolbar,
             R.string.app_name, R.string.app_name
         )
@@ -50,6 +53,18 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         toggle.syncState()
 
         navigationView.setNavigationItemSelectedListener(this)
+
+        toolbar.setNavigationOnClickListener {
+            if (currentFragmentTag == "home") {
+                drawerLayout.openDrawer(GravityCompat.START)
+            } else {
+                loadFragment(HomeFragment())
+                currentFragmentTag = "home"
+                navigationView.setCheckedItem(R.id.nav_home)
+                supportActionBar?.title = "Country Explorer"
+                toolbar.navigationIcon = null
+            }
+        }
 
         val themeItem = navigationView.menu.findItem(R.id.nav_theme)
         themeItem?.title = if (ThemeHelper.isDarkTheme(this)) "Dark Theme" else "Light Theme"
@@ -92,10 +107,20 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         fragment?.let {
             loadFragment(it)
             supportActionBar?.title = item.title
+            currentFragmentTag = item.itemId.toString()
+            updateNavigationIcon()
         }
 
         drawerLayout.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    private fun updateNavigationIcon() {
+        if (currentFragmentTag == "home") {
+            toolbar.navigationIcon = null
+        } else {
+            toolbar.setNavigationIcon(R.drawable.ic_back)
+        }
     }
 
     fun loadFragment(fragment: Fragment) {
@@ -103,6 +128,26 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             .replace(R.id.fragmentContainer, fragment)
             .addToBackStack(null)
             .commit()
+
+        val tag = when (fragment) {
+            is HomeFragment -> "home"
+            is AllCountriesFragment -> "all_countries"
+            is FavoritesFragment -> "favorites"
+            is CompareFragment -> "compare"
+            is RandomCountryFragment -> "random"
+            is QuizFragment -> "quiz"
+            is RankingsFragment -> "rankings"
+            is RecentlyViewedFragment -> "recently"
+            is ContinentsFragment -> "continents"
+            is RegionsFragment -> "regions"
+            is LanguagesFragment -> "languages"
+            is CurrenciesFragment -> "currencies"
+            is HelpFragment -> "help"
+            is AboutFragment -> "about"
+            else -> "other"
+        }
+        currentFragmentTag = tag
+        updateNavigationIcon()
     }
 
     override fun onBackPressed() {
