@@ -33,11 +33,6 @@
 - **API:** [countries.dev](https://countries.dev) (free, no auth required)
 - **Flags:** flags.restcountries.com
 
-## Screenshots
-
-| Home | All Countries | Country Details |
-|------|--------------|-----------------|
-| ![Home](screenshots/home.png) | ![All](screenshots/all.png) | ![Detail](screenshots/detail.png) |
 
 ## Getting Started
 
