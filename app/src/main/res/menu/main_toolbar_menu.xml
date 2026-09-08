@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!-- Top-right search action on the Home / Country Explorer page -->
+    
     <item
         android:id="@+id/action_search"
         android:icon="@drawable/ic_search"

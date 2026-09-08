@@ -7,7 +7,7 @@
     android:orientation="vertical"
     tools:context=".LanguagesFragment">
 
-    <!-- Header -->
+    
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -19,7 +19,7 @@
         android:textSize="20sp"
         android:textStyle="bold" />
 
-    <!-- Search Bar -->
+    
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="48dp"
@@ -53,7 +53,7 @@
             android:textSize="14sp" />
     </LinearLayout>
 
-    <!-- Language List -->
+    
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
@@ -63,7 +63,7 @@
         android:paddingHorizontal="16dp"
         android:paddingBottom="8dp" />
 
-    <!-- Empty State -->
+    
     <LinearLayout
         android:id="@+id/emptyState"
         android:layout_width="match_parent"

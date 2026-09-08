@@ -137,7 +137,6 @@ class RecentlyViewedFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        // Refresh the list so countries viewed while away appear immediately
         val state = viewModel.uiState.value
         if (state is CountriesUiState.Success) {
             val recent = recentlyViewedManager.getRecentlyViewed(state.countries)

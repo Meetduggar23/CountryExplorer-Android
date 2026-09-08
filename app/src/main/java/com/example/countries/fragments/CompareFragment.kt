@@ -91,7 +91,6 @@ class CompareFragment : Fragment() {
 
         val listener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, v: View?, position: Int, id: Long) {
-                // Ignore the initial callbacks fired while the spinners are still being set up
                 if (!selectionInitialized) return
                 renderComparison()
             }

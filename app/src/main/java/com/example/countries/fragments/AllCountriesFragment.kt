@@ -127,7 +127,6 @@ class AllCountriesFragment : Fragment() {
         setupResetFilters()
         observeViewModel()
 
-        // Opened from the Home search icon: open keyboard on the search field
         if (autoFocusSearch) {
             searchEditText.requestFocus()
             searchEditText.post {

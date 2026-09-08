@@ -29,13 +29,13 @@
             android:layout_height="0dp"
             android:layout_weight="1" />
 
-        <!-- Divider above the bottom navigation bar -->
+        
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/divider" />
 
-        <!-- Bottom Navigation Bar -->
+        
         <LinearLayout
             android:id="@+id/bottomNavContainer"
             android:layout_width="match_parent"
@@ -45,7 +45,7 @@
             android:orientation="horizontal"
             android:paddingBottom="0dp">
 
-            <!-- All Countries -->
+            
             <LinearLayout
                 android:id="@+id/navAllCountries"
                 android:layout_width="0dp"
@@ -64,7 +64,7 @@
                     android:tint="@color/bottom_nav_icon" />
             </LinearLayout>
 
-            <!-- Favorites -->
+            
             <LinearLayout
                 android:id="@+id/navFavorites"
                 android:layout_width="0dp"
@@ -83,7 +83,7 @@
                     android:tint="@color/bottom_nav_icon" />
             </LinearLayout>
 
-            <!-- Compare -->
+            
             <LinearLayout
                 android:id="@+id/navCompare"
                 android:layout_width="0dp"
@@ -102,7 +102,7 @@
                     android:tint="@color/bottom_nav_icon" />
             </LinearLayout>
 
-            <!-- Random -->
+            
             <LinearLayout
                 android:id="@+id/navRandom"
                 android:layout_width="0dp"
@@ -121,7 +121,7 @@
                     android:tint="@color/bottom_nav_icon" />
             </LinearLayout>
 
-            <!-- Quiz -->
+            
             <LinearLayout
                 android:id="@+id/navQuiz"
                 android:layout_width="0dp"

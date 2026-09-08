@@ -8,7 +8,7 @@
     android:orientation="vertical"
     tools:context=".CompareFragment">
 
-    <!-- Header -->
+    
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -20,7 +20,7 @@
         android:textSize="20sp"
         android:textStyle="bold" />
 
-    <!-- Spinner Row -->
+    
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -58,7 +58,7 @@
             android:popupBackground="@color/secondary_dark_navy" />
     </LinearLayout>
 
-    <!-- Compare Button -->
+    
     <Button
         android:id="@+id/compareButton"
         android:layout_width="match_parent"
@@ -70,7 +70,7 @@
         android:textColor="@color/text_white"
         android:textSize="14sp" />
 
-    <!-- Compare Results -->
+    
     <ScrollView
         android:id="@+id/compareContainer"
         android:layout_width="match_parent"
@@ -87,7 +87,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <!-- Country 1 Card -->
+            
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardCountry1"
                 android:layout_width="0dp"
@@ -125,7 +125,7 @@
                         android:textStyle="bold"
                         tools:text="Country 1" />
 
-                    <!-- Stats -->
+                    
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -194,7 +194,7 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Country 2 Card -->
+            
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardCountry2"
                 android:layout_width="0dp"
@@ -302,7 +302,7 @@
         </LinearLayout>
     </ScrollView>
 
-    <!-- Empty state prompt when no selection -->
+    
     <LinearLayout
         android:id="@+id/compareEmptyPrompt"
         android:layout_width="match_parent"

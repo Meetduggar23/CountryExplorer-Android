@@ -42,8 +42,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     val imageCache = mutableMapOf<String, Bitmap>()
     private var currentFragmentTag: String = "home"
 
-    // The bottom navigation bar is visible on every page of the app.
-
     override fun onCreate(savedInstanceState: Bundle?) {
         ThemeHelper.applyTheme(this)
         super.onCreate(savedInstanceState)
@@ -96,8 +94,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         viewModel = ViewModelProvider(this)[CountryViewModel::class.java]
 
-        // Keep toolbar title / nav icon / bottom-nav / search menu in sync
-        // when the user presses system back between fragments.
         supportFragmentManager.addOnBackStackChangedListener {
             val top = supportFragmentManager.findFragmentById(R.id.fragmentContainer) ?: return@addOnBackStackChangedListener
             currentFragmentTag = tagFor(top)
@@ -147,8 +143,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun updateBottomNavSelection() {
-        // Theme-aware colors: dark icon in light theme, light icon in dark
-        // theme; selected item is highlighted with the accent color.
         val selectedColor = ContextCompat.getColor(this, R.color.accent_red)
         val unselectedColor = ContextCompat.getColor(this, R.color.bottom_nav_icon)
 
@@ -160,11 +154,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun updateBottomNavVisibility() {
-        // Always visible: the bottom bar is shown on every page.
         bottomNavContainer.visibility = View.VISIBLE
     }
 
-    // Search action lives in the toolbar only on the Home page
     override fun onCreateOptionsMenu(menu: android.view.Menu): Boolean {
         if (currentFragmentTag == "home") {
             menuInflater.inflate(R.menu.main_toolbar_menu, menu)
@@ -245,7 +237,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         updateNavigationIcon()
         updateBottomNavVisibility()
         updateBottomNavSelection()
-        // Show/hide the Home search icon when the page changes
         invalidateOptionsMenu()
     }
 

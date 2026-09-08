@@ -10,7 +10,7 @@
     android:paddingVertical="12dp"
     android:layout_marginBottom="6dp">
 
-    <!-- Rank Number -->
+    
     <TextView
         android:id="@+id/rankNumber"
         android:layout_width="28dp"
@@ -20,7 +20,7 @@
         android:textStyle="bold"
         tools:text="1" />
 
-    <!-- Flag -->
+    
     <ImageView
         android:id="@+id/flagImage"
         android:layout_width="36dp"
@@ -31,7 +31,7 @@
         tools:ignore="ContentDescription"
         tools:srcCompat="@tools:sample/flags" />
 
-    <!-- Country Name -->
+    
     <TextView
         android:id="@+id/countryName"
         android:layout_width="0dp"
@@ -43,7 +43,7 @@
         android:maxLines="1"
         tools:text="United States" />
 
-    <!-- Value -->
+    
     <TextView
         android:id="@+id/valueText"
         android:layout_width="wrap_content"

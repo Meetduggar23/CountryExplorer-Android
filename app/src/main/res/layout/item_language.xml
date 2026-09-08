@@ -16,7 +16,7 @@
         android:orientation="horizontal"
         android:padding="16dp">
 
-        <!-- Language Name -->
+        
         <TextView
             android:id="@+id/languageName"
             android:layout_width="0dp"
@@ -27,7 +27,7 @@
             android:textStyle="bold"
             tools:text="English" />
 
-        <!-- Language Code -->
+        
         <TextView
             android:id="@+id/languageCode"
             android:layout_width="wrap_content"
@@ -41,7 +41,7 @@
             android:textSize="11sp"
             tools:text="en" />
 
-        <!-- Country Count Badge -->
+        
         <TextView
             android:id="@+id/countryCount"
             android:layout_width="wrap_content"
@@ -53,7 +53,7 @@
             android:textSize="12sp"
             tools:text="67 countries" />
 
-        <!-- Chevron -->
+        
         <ImageView
             android:layout_width="20dp"
             android:layout_height="20dp"

@@ -97,7 +97,6 @@ class CountryDetailActivity : AppCompatActivity() {
     }
 
     private fun applyWindowInsets() {
-        // Push the toolbar below the status bar (edge-to-edge layouts)
         val toolbar = findViewById<LinearLayout>(R.id.detailToolbar)
         ViewCompat.setOnApplyWindowInsetsListener(toolbar) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())

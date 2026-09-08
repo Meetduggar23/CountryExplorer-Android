@@ -4,7 +4,7 @@
     android:viewportWidth="24"
     android:viewportHeight="24"
     android:tint="?attr/colorControlNormal">
-    <!-- Swap arrows: top arrow points right, bottom arrow points left -->
+    
     <path
         android:fillColor="@android:color/white"
         android:pathData="M4,6h12v-2l4,3 -4,3v-2H4z M20,18H8v2l-4,-3 4,-3v2h12z" />

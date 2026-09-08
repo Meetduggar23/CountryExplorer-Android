@@ -8,7 +8,7 @@
     android:orientation="vertical"
     tools:context=".fragments.RankingsFragment">
 
-    <!-- Header -->
+    
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -20,7 +20,7 @@
         android:textSize="20sp"
         android:textStyle="bold" />
 
-    <!-- Main Tab Row (Population / Area) -->
+    
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="44dp"
@@ -53,7 +53,7 @@
             android:textSize="13sp" />
     </LinearLayout>
 
-    <!-- Sub Tab Row (Highest / Lowest) -->
+    
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
@@ -86,7 +86,7 @@
             android:textSize="12sp" />
     </LinearLayout>
 
-    <!-- Ranking Title -->
+    
     <TextView
         android:id="@+id/rankingTitle"
         android:layout_width="wrap_content"
@@ -98,7 +98,7 @@
         android:textStyle="bold"
         tools:text="Population (Highest)" />
 
-    <!-- Rankings List -->
+    
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -112,7 +112,7 @@
             android:paddingHorizontal="16dp"
             android:paddingBottom="80dp" />
 
-        <!-- Scroll to Top FAB -->
+        
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/scrollUpFab"
             android:layout_width="56dp"

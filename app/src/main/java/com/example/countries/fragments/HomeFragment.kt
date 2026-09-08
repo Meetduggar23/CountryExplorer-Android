@@ -70,8 +70,6 @@ class HomeFragment : Fragment() {
             insets
         }
 
-        // Share the activity-level flag cache so returning to Home doesn't
-        // re-download every recently-viewed flag
         val imageCache: MutableMap<String, android.graphics.Bitmap> =
             (activity as? MainActivity)?.imageCache ?: mutableMapOf()
 
@@ -173,9 +171,6 @@ class HomeFragment : Fragment() {
     }
 
     private fun getContinentCounts(countries: List<com.example.countries.Country>): Map<String, Int> {
-        // Group by region (Africa, Americas, Asia, Europe, Oceania, Antarctic).
-        // Regions are mutually exclusive, unlike continents after the Americas
-        // mapping, so the dashboard counts always sum to the country total.
         val counts = mutableMapOf<String, Int>()
         countries.forEach { country ->
             val key = country.region.ifEmpty { "Not available" }

@@ -13,11 +13,6 @@ class ApiClient {
 
     companion object {
         private const val TAG = "ApiClient"
-        // NOTE: REST Countries v1-v4 are fully deprecated and return errors.
-        // REST Countries v5 requires a paid API key (500 req/month free tier).
-        // The demo key "rc_live_demo" only returns 1 sample country (Canada).
-        // We use countries.dev instead — a free, no-key alternative that provides
-        // the same country data with the same field names as the old v3.1 API.
         private const val BASE_URL = "https://countries.dev/countries"
         private const val PAGE_SIZE = 250
     }
@@ -177,16 +172,13 @@ class ApiClient {
             }
         }
 
-        // The API reports "Americas" as the region, but continents are
-        // North America / South America. Map it so the Continents page and
-        // quiz continent questions include the American countries.
         val continents = mutableListOf<String>()
         when (region) {
             "Americas" -> {
                 continents.add("North America")
                 continents.add("South America")
             }
-            "", "Not available" -> { /* leave empty */ }
+            "", "Not available" -> {}
             else -> continents.add(region)
         }
 
@@ -236,7 +228,6 @@ class ApiClient {
                     currencies.add(if (symbol.isNotEmpty()) "$name ($symbol)" else name)
                 }
             } catch (e: Exception) {
-                // skip malformed currency
             }
         }
         return if (currencies.isNotEmpty()) currencies.joinToString(", ") else "Not available"
@@ -251,7 +242,6 @@ class ApiClient {
                 val name = langObj.optString("name", "")
                 if (name.isNotEmpty()) languages.add(name)
             } catch (e: Exception) {
-                // skip malformed language
             }
         }
         return if (languages.isNotEmpty()) languages.joinToString(", ") else "Not available"

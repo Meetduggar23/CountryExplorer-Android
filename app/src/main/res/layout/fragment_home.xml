@@ -7,7 +7,7 @@
     android:background="@color/primary_dark_navy"
     tools:context=".fragments.HomeFragment">
 
-    <!-- Scrollable content -->
+    
     <ScrollView
         android:id="@+id/homeScrollView"
         android:layout_width="match_parent"
@@ -24,7 +24,7 @@
             android:paddingTop="16dp"
             android:paddingBottom="16dp">
 
-            <!-- Loading Indicator -->
+            
             <ProgressBar
                 android:id="@+id/loadingIndicator"
                 android:layout_width="48dp"
@@ -34,7 +34,7 @@
                 android:indeterminateTint="@color/accent_red"
                 android:visibility="gone" />
 
-            <!-- Error Container -->
+            
             <LinearLayout
                 android:id="@+id/errorContainer"
                 android:layout_width="match_parent"
@@ -85,7 +85,7 @@
                     android:textSize="14sp" />
             </LinearLayout>
 
-            <!-- Welcome Header -->
+            
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -103,7 +103,7 @@
                 android:textColor="@color/text_light_gray"
                 android:textSize="13sp" />
 
-            <!-- Statistics Cards -->
+            
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -216,7 +216,7 @@
                 </androidx.cardview.widget.CardView>
             </LinearLayout>
 
-            <!-- Continents Section -->
+            
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -234,7 +234,7 @@
                 app:columnCount="2"
                 app:useDefaultMargins="true" />
 
-            <!-- Favorites & Pinned Summary -->
+            
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -312,7 +312,7 @@
                 </androidx.cardview.widget.CardView>
             </LinearLayout>
 
-            <!-- Recently Viewed Section -->
+            
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -353,7 +353,7 @@
                 android:layout_height="wrap_content"
                 android:nestedScrollingEnabled="false" />
 
-            <!-- Last Updated -->
+            
             <TextView
                 android:id="@+id/lastUpdatedText"
                 android:layout_width="wrap_content"

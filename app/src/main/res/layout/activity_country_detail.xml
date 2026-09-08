@@ -6,7 +6,7 @@
     android:background="@color/primary_dark_navy"
     android:orientation="vertical">
 
-    <!-- Toolbar -->
+    
     <LinearLayout
         android:id="@+id/detailToolbar"
         android:layout_width="match_parent"
@@ -75,7 +75,7 @@
             android:src="@drawable/ic_more_vert" />
     </LinearLayout>
 
-    <!-- Scrollable content -->
+    
     <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
@@ -93,7 +93,7 @@
             android:paddingTop="12dp"
             android:paddingBottom="24dp">
 
-            <!-- Summary Stats — 2-column grid -->
+            
             <LinearLayout
                 android:id="@+id/summaryContainer"
                 android:layout_width="match_parent"
@@ -101,7 +101,7 @@
                 android:layout_marginBottom="16dp"
                 android:orientation="vertical">
 
-                <!-- Row 1: Population + Area -->
+                
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -159,7 +159,7 @@
                     </LinearLayout>
                 </LinearLayout>
 
-                <!-- Row 2: Region + Capital -->
+                
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -217,7 +217,7 @@
                     </LinearLayout>
                 </LinearLayout>
 
-                <!-- Row 3: Currency (full width) -->
+                
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -242,7 +242,7 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- Flag Card -->
+            
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -273,7 +273,7 @@
                 </FrameLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Country Name -->
+            
             <TextView
                 android:id="@+id/countryNameText"
                 android:layout_width="match_parent"
@@ -283,7 +283,7 @@
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
-            <!-- Official Name -->
+            
             <TextView
                 android:id="@+id/officialNameText"
                 android:layout_width="match_parent"
@@ -292,7 +292,7 @@
                 android:textColor="@color/text_muted"
                 android:textSize="13sp" />
 
-            <!-- General Information -->
+            
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -368,7 +368,7 @@
                     android:textSize="15sp" />
             </LinearLayout>
 
-            <!-- Statistics -->
+            
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -466,7 +466,7 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- Economy & Languages -->
+            
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -521,7 +521,7 @@
                     android:textSize="15sp" />
             </LinearLayout>
 
-            <!-- Time & Location -->
+            
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -597,7 +597,7 @@
                     android:textSize="15sp" />
             </LinearLayout>
 
-            <!-- Neighbor Countries -->
+            
             <LinearLayout
                 android:id="@+id/neighborsContainer"
                 android:layout_width="match_parent"

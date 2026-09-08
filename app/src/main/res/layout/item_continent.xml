@@ -24,7 +24,7 @@
             android:src="@drawable/ic_globe"
             tools:ignore="ContentDescription" />
 
-        <!-- Continent Name -->
+        
         <TextView
             android:id="@+id/continentName"
             android:layout_width="0dp"
@@ -35,7 +35,7 @@
             android:textStyle="bold"
             tools:text="Europe" />
 
-        <!-- Country Count Badge -->
+        
         <TextView
             android:id="@+id/countryCount"
             android:layout_width="wrap_content"
@@ -47,7 +47,7 @@
             android:textSize="12sp"
             tools:text="50 countries" />
 
-        <!-- Chevron -->
+        
         <ImageView
             android:layout_width="20dp"
             android:layout_height="20dp"
