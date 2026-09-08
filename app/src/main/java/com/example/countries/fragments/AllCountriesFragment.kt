@@ -81,7 +81,8 @@ class AllCountriesFragment : Fragment() {
             filterRegion: String? = null,
             filterContinent: String? = null,
             filterLanguage: String? = null,
-            filterCurrency: String? = null
+            filterCurrency: String? = null,
+            autoFocusSearch: Boolean = false
         ): AllCountriesFragment {
             return AllCountriesFragment().apply {
                 arguments = Bundle().apply {
@@ -89,6 +90,7 @@ class AllCountriesFragment : Fragment() {
                     filterContinent?.let { putString("filterContinent", it) }
                     filterLanguage?.let { putString("filterLanguage", it) }
                     filterCurrency?.let { putString("filterCurrency", it) }
+                    putBoolean("autoFocusSearch", autoFocusSearch)
                 }
             }
         }
@@ -114,6 +116,7 @@ class AllCountriesFragment : Fragment() {
         filterContinent = arguments?.getString("filterContinent")
         filterLanguage = arguments?.getString("filterLanguage")
         filterCurrency = arguments?.getString("filterCurrency")
+        val autoFocusSearch = arguments?.getBoolean("autoFocusSearch", false) ?: false
 
         initViews(view)
         setupAdapter()
@@ -123,6 +126,16 @@ class AllCountriesFragment : Fragment() {
         setupScrollToTop()
         setupResetFilters()
         observeViewModel()
+
+        // Opened from the Home search icon: open keyboard on the search field
+        if (autoFocusSearch) {
+            searchEditText.requestFocus()
+            searchEditText.post {
+                val imm = requireContext().getSystemService(android.content.Context.INPUT_METHOD_SERVICE)
+                    as? android.view.inputmethod.InputMethodManager
+                imm?.showSoftInput(searchEditText, android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT)
+            }
+        }
     }
 
     private fun initViews(view: View) {

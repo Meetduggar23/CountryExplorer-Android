@@ -52,7 +52,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar?.title = "Country Explorer"
-
         drawerLayout = findViewById(R.id.drawerLayout)
         navigationView = findViewById(R.id.navigationView)
         bottomNavContainer = findViewById(R.id.bottomNavContainer)
@@ -96,6 +95,18 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         themeItem?.title = if (ThemeHelper.isDarkTheme(this)) "Dark Theme" else "Light Theme"
 
         viewModel = ViewModelProvider(this)[CountryViewModel::class.java]
+
+        // Keep toolbar title / nav icon / bottom-nav / search menu in sync
+        // when the user presses system back between fragments.
+        supportFragmentManager.addOnBackStackChangedListener {
+            val top = supportFragmentManager.findFragmentById(R.id.fragmentContainer) ?: return@addOnBackStackChangedListener
+            currentFragmentTag = tagFor(top)
+            supportActionBar?.title = titleForTag(currentFragmentTag)
+            updateNavigationIcon()
+            updateBottomNavVisibility()
+            updateBottomNavSelection()
+            invalidateOptionsMenu()
+        }
 
         if (savedInstanceState == null) {
             loadFragment(HomeFragment())
@@ -153,6 +164,30 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         bottomNavContainer.visibility = View.VISIBLE
     }
 
+    // Search action lives in the toolbar only on the Home page
+    override fun onCreateOptionsMenu(menu: android.view.Menu): Boolean {
+        if (currentFragmentTag == "home") {
+            menuInflater.inflate(R.menu.main_toolbar_menu, menu)
+        }
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_search -> {
+                openSearch()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun openSearch() {
+        loadFragment(AllCountriesFragment.newInstance(autoFocusSearch = true))
+        supportActionBar?.title = "All Countries"
+        navigationView.setCheckedItem(R.id.nav_all_countries)
+    }
+
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.nav_theme) {
             val newMode = ThemeHelper.toggleTheme(this)
@@ -206,27 +241,47 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             .addToBackStack(null)
             .commit()
 
-        val tag = when (fragment) {
-            is HomeFragment -> "home"
-            is AllCountriesFragment -> "all_countries"
-            is FavoritesFragment -> "favorites"
-            is CompareFragment -> "compare"
-            is RandomCountryFragment -> "random"
-            is QuizFragment -> "quiz"
-            is RankingsFragment -> "rankings"
-            is RecentlyViewedFragment -> "recently"
-            is ContinentsFragment -> "continents"
-            is RegionsFragment -> "regions"
-            is LanguagesFragment -> "languages"
-            is CurrenciesFragment -> "currencies"
-            is HelpFragment -> "help"
-            is AboutFragment -> "about"
-            else -> "other"
-        }
-        currentFragmentTag = tag
+        currentFragmentTag = tagFor(fragment)
         updateNavigationIcon()
         updateBottomNavVisibility()
         updateBottomNavSelection()
+        // Show/hide the Home search icon when the page changes
+        invalidateOptionsMenu()
+    }
+
+    private fun tagFor(fragment: Fragment): String = when (fragment) {
+        is HomeFragment -> "home"
+        is AllCountriesFragment -> "all_countries"
+        is FavoritesFragment -> "favorites"
+        is CompareFragment -> "compare"
+        is RandomCountryFragment -> "random"
+        is QuizFragment -> "quiz"
+        is RankingsFragment -> "rankings"
+        is RecentlyViewedFragment -> "recently"
+        is ContinentsFragment -> "continents"
+        is RegionsFragment -> "regions"
+        is LanguagesFragment -> "languages"
+        is CurrenciesFragment -> "currencies"
+        is HelpFragment -> "help"
+        is AboutFragment -> "about"
+        else -> "other"
+    }
+
+    private fun titleForTag(tag: String): String = when (tag) {
+        "all_countries" -> "All Countries"
+        "favorites" -> "Favorites"
+        "compare" -> "Compare"
+        "random" -> "Random Country"
+        "quiz" -> "Country Quiz"
+        "rankings" -> "Rankings"
+        "recently" -> "Recently Viewed"
+        "continents" -> "Continents"
+        "regions" -> "Regions"
+        "languages" -> "Languages"
+        "currencies" -> "Currencies"
+        "help" -> "Help"
+        "about" -> "About"
+        else -> "Country Explorer"
     }
 
     override fun onBackPressed() {
